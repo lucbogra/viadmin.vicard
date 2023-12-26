@@ -8,6 +8,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+import { i18nVue } from 'laravel-vue-i18n'
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -15,6 +17,13 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(i18nVue, {
+                lang: 'en',
+                resolve: lang => {
+                    const langs = import.meta.glob('../../lang/*.json', { eager: true });
+                    return langs[`../../lang/${lang}.json`].default;
+                },
+            })
             .mount(el);
     },
     progress: {
