@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -18,6 +22,8 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasUuids;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -57,4 +63,16 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function cards(): BelongsToMany {
+        return $this->belongsToMany(Card::class)->withPivot('permissions', 'owner');
+    }
+
+    public function ownerOf(): HasMany {
+        return $this->hasMany(Card::class, 'owner_id');
+    }
+
+    public function cardRequests(): HasMany {
+        return $this->hasMany(CardRequest::class);
+    }
 }
