@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Jetstream\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -31,7 +33,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'cod_investor_id', 'type'
     ];
 
     /**
@@ -53,6 +55,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // 'password' => 'hash'
+    ];
+
+    protected $with = [
+        'roles'
     ];
 
     /**
@@ -64,15 +71,43 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function cards(): BelongsToMany {
-        return $this->belongsToMany(Card::class)->withPivot('permissions', 'owner');
+    const CUSTOMERS_ROLE_LISTS = ['Account Manager', 'Account Owner', 'Member'];
+    
+    const ADMINS_ROLE_LISTS = ['Admin'];
+
+    public function scopeSearch($builder, $term) {
+        $builder->where("name", "LIKE", "%$term%")
+                ->orWhere("email", "LIKE", "%$term%");
     }
 
-    public function ownerOf(): HasMany {
+    public function scopeCustomers($builder) {
+        $builder->whereHas("roles", function($query) {
+            $query->whereIn("roles.name", User::CUSTOMERS_ROLE_LISTS);
+        });
+    }
+
+    public function cards(): BelongsToMany {
+
+        return $this->belongsToMany(Card::class)->withPivot('permissions', 'owner');
+
+    }
+
+    public function owner(): HasMany {
+
         return $this->hasMany(Card::class, 'owner_id');
+        
     }
 
     public function cardRequests(): HasMany {
+
         return $this->hasMany(CardRequest::class);
+
     }
+
+    // public function role(): HasOne {
+
+    //     return $this->belongsToMany(Role::class)->oldest()->limit(1);
+    //     // return $this->hasOne(Role::class)->oldestOfMany();
+
+    // }
 }

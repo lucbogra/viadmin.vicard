@@ -1,7 +1,7 @@
 <template>
     <Head :title="title" />
   
-    <div class="min-h-full">
+    <div class="min-h-screen bg-gray-50">
       
       <Navbar :sidebar-open="sidebarOpen" @close="sidebarOpen = false" />
   
@@ -96,13 +96,13 @@
                 </div>
             </div>
         
-            <main class="flex-1 app-main">
+            <main class="flex-1">
 
-                <div class="px-10 py-2">
+                <div class="px-10 py-2" v-if="$slots.header">
                     <slot name="header" />
                 </div>
         
-                <div class="px-10 py-2 app-breadcrumbs">
+                <div class="px-10 py-2 app-breadcrumbs" v-if="breadcrumbs != ''">
                     <Breadcrumb :breadcrumbs="breadcrumbs" />
                 </div>
                 

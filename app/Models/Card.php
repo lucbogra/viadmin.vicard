@@ -19,11 +19,14 @@ class Card extends Model
     use HasUuids;
     use SoftDeletes;
 
+    protected $guarded = [];
+
     const TYPE = ['virtual', 'physical'];
 
     const STATUS = ['activated', 'not activated', 'frozen'];
 
     protected $casts = [
+        "card_validity"         => 'date:Y-m-d',
         "card_balance"          => Money::class,
         "card_limit"            => Money::class,
         "daily_limit"           => Money::class,

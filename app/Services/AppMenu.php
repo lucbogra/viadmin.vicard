@@ -26,10 +26,18 @@ class AppMenu {
                     ],  
 
                     [
-                        "name"    => __("Statistics"), 
+                        "name"    => __("Customers"), 
+                        "url"     => route("customers.index"), 
+                        "icon"    => "ci:users-group",
+                        "current" => request()->routeIs('customers.*'), 
+                        "subMenu" => []
+                    ], 
+
+                    [
+                        "name"    => __("Cards"), 
                         "url"     => route("dashboard"), 
-                        "icon"    => "akar-icons:statistic-up",
-                        "current" => request()->routeIs('dashboard'), 
+                        "icon"    => "ion:card-outline",
+                        "current" => request()->routeIs('cards.*'), 
                         "subMenu" => []
                     ],    
                 ]
@@ -42,9 +50,30 @@ class AppMenu {
                         "name"    => __("Card Requests"), 
                         "url"     => route("dashboard"), 
                         "icon"    => "carbon:intent-request-scale-in",
-                        "current" => request()->routeIs('dashboard'), 
+                        "current" => request()->routeIs('card-requests.*'), 
                         "subMenu" => []
                     ],    
+                    [
+                        "name"    => __("Recharge Requests"), 
+                        "url"     => route("dashboard"), 
+                        "icon"    => "majesticons:money-plus-line",
+                        "current" => request()->routeIs('recharge-requests.*'), 
+                        "subMenu" => []
+                    ],    
+                ]
+            ],
+
+            [
+                "block" => __("Settings"),
+                "items" => [
+                    [
+                        "name"    => __("Our Bank Info"), 
+                        "url"     => route("dashboard"), 
+                        "icon"    => "basil:bank-solid",
+                        "current" => request()->routeIs('settings.*'), 
+                        "subMenu" => []
+                    ],    
+      
                 ]
             ],
        

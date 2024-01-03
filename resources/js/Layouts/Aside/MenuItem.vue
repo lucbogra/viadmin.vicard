@@ -3,7 +3,7 @@
     <template v-if="menu.subMenu.length">
         <div :class="[
                 menu.current 
-                ? 'bg-navbar-800 text-white' 
+                ? 'bg-gray-800 text-white' 
                 : 'text-gray-100 hover:bg-gray-600 hover:text-white', 
                 'group flex items-center cursor-pointer justify-between rounded-md px-3 py-3 text-sm font-medium leading-6'
             ]" 
@@ -53,8 +53,8 @@
 
     <Link v-else :class="[
             menu.current 
-            ? 'bg-navbar-800 text-white' 
-            : 'text-gray-100 hover:bg-gray-600 hover:text-white', 
+            ? 'bg-gray-900 text-white hover:bg-gray-700' 
+            : 'text-gray-100 hover:bg-gray-900 hover:text-white', 
             'group flex items-center rounded-md px-3 py-3 text-sm font-medium leading-6'
         ]" 
         :aria-current="

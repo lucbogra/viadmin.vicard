@@ -6,9 +6,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 import { i18nVue } from 'laravel-vue-i18n'
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
+const appName = import.meta.env.VITE_APP_NAME || 'VICARD';
+
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -17,6 +21,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(ElementPlus)
             .use(i18nVue, {
                 lang: 'en',
                 resolve: lang => {

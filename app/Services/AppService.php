@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Services;
+
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+
+class AppService {
+
+    public function randomString(int $stringLength = 12, bool $all = true) {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        $numeric = '1234567890';
+        $specialCars = '';
+
+        $all = "";
+
+        $all .= $alphabet;
+        
+        if ($all) {
+            $all .= $numeric;
+            $all .= $specialCars;
+        }
+
+        $string = array();
+        $alphaLength = strlen($all) - 1;
+
+        for ($i = 0; $i < $stringLength; $i++) {
+            $n = rand(0, $alphaLength);
+            $string[] = random_int(0, 1) ? $all[$n] : Str::upper($all[$n]);
+        }
+
+        return implode($string);
+    }
+
+    public function generateNumber(int $stringLength = 10) {
+        $numbers = '1234567890';
+
+        $string = array();
+
+        $alphaLength = strlen($numbers) - 1;
+
+        for ($i = 0; $i < $stringLength; $i++) {
+            $n = rand(0, $alphaLength);
+            $string[] = random_int(0, 1) ? $numbers[$n] : Str::upper($numbers[$n]);
+        }
+
+        return implode($string);
+    }
+
+    public function formatMoney(float|int $amount = null, $nullEqualToZoro = false): array|null
+    {
+        if ($amount == null) {
+
+            if (!$nullEqualToZoro) {
+                return null;
+            }
+
+            $amount = 0;
+        }
+
+        $formatted = number_format($amount, 2, '.', ',');
+
+        return [
+            "original"         => $amount,
+            "without_currency" => $formatted,
+            "with_currency"    => $formatted,
+        ];
+
+    }
+
+    public static function dateFormatter(Carbon $date = null, bool $expirable = false) {
+        $output = [
+            "db" => $date?->format("Y-m-d"),
+            "db_full" => $date?->format("Y-m-d H:i:s"),
+            "original"  => $date,
+            "formatted" => $date?->format("d/m/Y"),
+            "with_time" => $date?->format("d/m/Y H:i"),
+            "dif_for_humans" => $date?->diffForHumans(),
+        ];
+
+        return $output;
+    }
+
+}

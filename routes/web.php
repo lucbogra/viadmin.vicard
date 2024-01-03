@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,21 +17,20 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'admin'])->group(function () {
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', DashboardController::class);
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::prefix('customers/{customer}')->name('customers.')->group(function() {
+        Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
+
+        Route::get('card-requests', [CustomerController::class, 'cardrequests'])->name('card-requests.index');
+        Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
+
+        Route::get('refill-requests', [CustomerController::class, 'cardrequests'])->name('refill-requests.index');
+    });
+
+    Route::resource('/customers', CustomerController::class);
+
 });

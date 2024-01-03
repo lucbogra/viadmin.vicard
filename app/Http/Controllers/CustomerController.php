@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Inertia\Inertia;
+use App\Models\CardRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use App\Objects\FilterObject;
+use App\Mail\UserLoginInfoMail;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\CustomerRequest;
+use Diglactic\Breadcrumbs\Breadcrumbs;
+use App\Http\Resources\CustomerResource;
+use App\Http\Requests\CardRequestRequest;
+use App\Http\Repositories\CustomerRepository;
+use App\Models\Card;
+
+class CustomerController extends Controller
+{
+    public function __construct(private CustomerRepository $customerRepository) { }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.index");
+        
+        $filter = new FilterObject;
+
+        $customers = $this->customerRepository->all($filter);
+
+        return Inertia::render("Customers/Index", compact("customers", "filter", "breadcrumbs"));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.create");
+
+        return Inertia::render("Customers/Create", compact("breadcrumbs"));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(CustomerRequest $request)
+    {
+        $newCustomer = Arr::except($request->validated(), 'password_copied');
+
+        $newCustomer['password'] = bcrypt($request->password);
+
+        $customer = User::create($newCustomer);
+
+        $customer->assignRole('Account Manager');
+
+        Mail::to($customer)->send(new UserLoginInfoMail(user: $customer, password: $request->password));
+
+        return redirect()->route('customers.index')->with('success', __('Customer has been created successfully'));
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $customer)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.show", $customer);
+
+        $customer = $this->customerRepository->show($customer);
+
+        return Inertia::render("Customers/Show", compact("customer", "breadcrumbs"));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        //
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function cards(User $customer)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.cards.index", $customer);
+        
+        $filter = new FilterObject;
+
+        $cards = $this->customerRepository->allCards($customer, $filter);
+
+        $customer = New CustomerResource($customer);
+
+        return Inertia::render("Customers/Cards/Index", compact("cards", "customer", "filter", "breadcrumbs"));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function cardRequests(User $customer)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.card-requests.index", $customer);
+        
+        $filter = new FilterObject;
+
+        $cardRequests = $this->customerRepository->allCardRequests($customer, $filter);
+
+        $customer = New CustomerResource($customer);
+
+        return Inertia::render("Customers/CardRequests/Index", compact("cardRequests", "customer", "filter", "breadcrumbs"));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function cardRequestValidation(User $customer, CardRequest $cardRequest, CardRequestRequest $cardRequestRequest)
+    {
+        if ($cardRequestRequest->status == 'validated') {
+
+            $card = Card::create([
+                'owner_id' => $cardRequest->user_id,
+                'card_request_id' => $cardRequest->id,
+                'card_number' => $cardRequestRequest->card_number,
+                'card_validity' => $cardRequestRequest->card_validity,
+                'card_limit' => $cardRequestRequest->card_limit,
+                'card_fees' => 25,
+                'card_balance' => 0,
+                'daily_limit' => $cardRequestRequest->daily_limit,
+                'per_transaction_limit' => $cardRequestRequest->per_transaction_limit,
+                'card_status' => $cardRequestRequest->card_status,
+                'card_type' => $cardRequestRequest->card_type,
+            ]);
+
+            $customer->cards()->attach($card, attributes: [
+                'owner' => true,
+                'permissions' => json_encode(['all'])
+            ]);
+
+        }
+
+        $cardRequest->status = $cardRequestRequest->status;
+        $cardRequest->save();
+
+        $message = $cardRequestRequest->status == 'validated' ? __('The card has been created successfully') : __('The card has been rejected successfully');
+
+        return redirect()->back()->with('sucess', $message);
+    }
+}
