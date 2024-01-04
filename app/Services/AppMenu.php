@@ -67,10 +67,10 @@ class AppMenu {
                 "block" => __("Settings"),
                 "items" => [
                     [
-                        "name"    => __("Our Bank Info"), 
-                        "url"     => route("dashboard"), 
+                        "name"    => __("Our Banks Info"), 
+                        "url"     => route("settings.banks.index"), 
                         "icon"    => "basil:bank-solid",
-                        "current" => request()->routeIs('settings.*'), 
+                        "current" => request()->routeIs('settings.banks.*'), 
                         "subMenu" => []
                     ],    
       

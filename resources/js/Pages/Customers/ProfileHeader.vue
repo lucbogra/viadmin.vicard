@@ -88,13 +88,13 @@ const props = defineProps({
                     <NavLink class="space-x-1" :href="route('customers.card-requests.index', {customer: customer})"
                             :active="route().current('customers.card-requests.index')">
                         <Icon icon="ic:round-add-card" class="h-4 w-4" />
-                        <span>Card requests</span>
+                        <span>Card Requests</span>
                     </NavLink>
 
-                    <NavLink class="space-x-1" :href="route('customers.refill-requests.index', {customer: customer})"
-                            :active="route().current('customers.refill-requests.index')">
+                    <NavLink class="space-x-1" :href="route('customers.topup-requests.index', {customer: customer})"
+                            :active="route().current('customers.topup-requests.index')">
                         <Icon icon="majesticons:money-plus-line" class="h-4 w-4" />
-                        <span>Refill requests</span>
+                        <span>Top Up Requests</span>
                     </NavLink>
 
                 </div>
