@@ -104,10 +104,10 @@ class User extends Authenticatable
 
     }
 
-    // public function role(): HasOne {
+    public function cardTopUpRequests(): HasMany {
 
-    //     return $this->belongsToMany(Role::class)->oldest()->limit(1);
-    //     // return $this->hasOne(Role::class)->oldestOfMany();
+        return $this->hasMany(CardTopUpRequest::class);
 
-    // }
+    }
+
 }

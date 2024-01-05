@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\CardRequest;
@@ -15,7 +16,8 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use App\Http\Resources\CustomerResource;
 use App\Http\Requests\CardRequestRequest;
 use App\Http\Repositories\CustomerRepository;
-use App\Models\Card;
+use App\Http\Requests\CardTopupRequestRequest;
+use App\Models\CardTopUpRequest;
 
 class CustomerController extends Controller
 {
@@ -165,5 +167,45 @@ class CustomerController extends Controller
         $message = $cardRequestRequest->status == 'validated' ? __('The card has been created successfully') : __('The card has been rejected successfully');
 
         return redirect()->back()->with('sucess', $message);
+    }
+    
+    /**
+     * Display a listing of the resource.
+     */
+    public function cardTopupRequests(User $customer)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.topup-requests.index", $customer);
+        
+        $filter = new FilterObject;
+
+        $cardTopupRequests = $this->customerRepository->allCardTopupRequests($customer, $filter);
+
+        $customer = New CustomerResource($customer);
+
+        return Inertia::render("Customers/CardTopupRequests/Index", compact("cardTopupRequests", "customer", "filter", "breadcrumbs"));
+    }
+
+    
+    /**
+     * Display a listing of the resource.
+     */
+    public function cardTopupRequestValidation(User $customer, CardTopUpRequest $cardRequest, CardTopupRequestRequest $cardTopupRequestRequest)
+    {
+        if ($cardTopupRequestRequest->status == 'validated') {
+
+            $amount = $cardRequest->card->card_balance->getMinorAmount()->toInt() + $cardTopupRequestRequest->amount;
+
+            $cardRequest->card()->update([
+                'card_balance' => $amount,
+            ]);
+
+        }
+
+        $cardRequest->status = $cardTopupRequestRequest->status;
+        $cardRequest->save();
+
+        $message = $cardTopupRequestRequest->status == 'validated' ? __('The card has been recharged successfully') : __('The card has been rejected successfully');
+
+        return redirect()->back()->with('success', $message);
     }
 }

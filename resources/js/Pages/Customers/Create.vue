@@ -132,9 +132,8 @@ const submit = () => {
                 <div class="space-y-6">
                 
                     <div class="flex flex-col items-center space-y-3 justify-center transition-all duration-300" :class="form.cod_investor_id ? 'py-8' : 'py-32'">
-                        <div class="rounded-full inline-block border border-gray-400 flex justify-center items-center transition-all duration-300"
-                            :class="form.cod_investor_id ? 'h-16 w-16' : 'h-32 w-32'">
-                            <!-- <Icon icon="lucide:user-search" class="h-20 w-20 text-gray-400" /> -->
+                        <div class="rounded-full inline-block border border-gray-400 flex justify-center items-center transition-all duration-300" :class="form.cod_investor_id ? 'h-16 w-16' : 'h-32 w-32'">
+
                             <img :src="UserSearchIcon1" class="transition-all duration-300" :class="form.cod_investor_id ? 'h-8 w-8' : 'h-20 w-20'" />
                             
                         </div>

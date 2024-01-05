@@ -14,6 +14,7 @@ const props = defineProps({
 
 <template>
     <div>
+
         <div class="px-10 py-5 border-t border-r border-l bg-white">
             <div class="block sm:flex items-center justify-between">
                 <div class="w-full mb-1">
@@ -43,13 +44,15 @@ const props = defineProps({
                                     </div>
                                 </div>
 
-                                <div class="m-0 p-O uppercase text-xl font-bold flex space-x-2">
+                                <!-- <div class="m-0 p-O uppercase text-xl font-bold flex space-x-2">
 
                                     dd f
 
-                                </div>
+                                </div> -->
                             </div>
                             <div class="grid grid-cols-1 space-x-2 w-1/3">
+
+                                
                     
                                 <!-- <div class="flex flex-col px-4 py-2 bg-green-50 rounded-md hover:shadow border border-gray-300 hover:border-gray-400">
                                     <div class="flex justify-between text-sm mb-3">
@@ -89,12 +92,18 @@ const props = defineProps({
                             :active="route().current('customers.card-requests.index')">
                         <Icon icon="ic:round-add-card" class="h-4 w-4" />
                         <span>Card Requests</span>
+                        <span style="font-size: .7em;;" class="w-4 h-4 rounded-full bg-orange-400 text-white inline-flex justify-center items-center" v-if="customer?.notifs?.card_requests_count">
+                        {{ customer.notifs.card_requests_count }}
+                        </span>
                     </NavLink>
 
                     <NavLink class="space-x-1" :href="route('customers.topup-requests.index', {customer: customer})"
                             :active="route().current('customers.topup-requests.index')">
                         <Icon icon="majesticons:money-plus-line" class="h-4 w-4" />
                         <span>Top Up Requests</span>
+                        <span style="font-size: .7em;;" class="w-4 h-4 rounded-full bg-orange-400 text-white inline-flex justify-center items-center" v-if="customer?.notifs?.card_topup_requests_count">
+                        {{ customer.notifs.card_topup_requests_count }}
+                        </span>
                     </NavLink>
 
                 </div>

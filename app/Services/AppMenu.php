@@ -54,10 +54,10 @@ class AppMenu {
                         "subMenu" => []
                     ],    
                     [
-                        "name"    => __("Recharge Requests"), 
-                        "url"     => route("dashboard"), 
+                        "name"    => __("Topup Requests"), 
+                        "url"     => route("topup-requests.index"), 
                         "icon"    => "majesticons:money-plus-line",
-                        "current" => request()->routeIs('recharge-requests.*'), 
+                        "current" => request()->routeIs('topup-requests.*'), 
                         "subMenu" => []
                     ],    
                 ]

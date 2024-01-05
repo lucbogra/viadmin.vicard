@@ -29,6 +29,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    icon: String,
     action: String,
     buttonIcon: String
 });

@@ -45,8 +45,10 @@ watch(filterForm, debounce(term => {
         <ProfileHeader :customer="customer.data" :breadcrumbs="breadcrumbs" />
   
         <div class="my-6">
-    
+
+            
             <div class=" bg-white mx-10 p-10">
+                <h5 class="mb-5 text-xl font-bold">List of cards</h5>
     
                 <Table
                     :loading="tableLoading"

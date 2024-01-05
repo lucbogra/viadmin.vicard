@@ -8,6 +8,7 @@ use App\Objects\FilterObject;
 use App\Http\Resources\CardResource;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\CardRequestResource;
+use App\Http\Resources\CardTopUpRequestResource;
 
 class CustomerRepository {
     
@@ -48,7 +49,22 @@ class CustomerRepository {
                 ->when($filter->status, function($query) use ($filter) {
                     $query->status($filter->status);
                 })
-                ->with('user')
+                ->with(['user'])
+                ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
+                ->paginate($filter->perPage)
+                ->withQueryString()
+        );
+       
+    }
+
+    public function allCardTopupRequests(User $customer, FilterObject $filter) {
+        
+        return CardTopUpRequestResource::collection(
+            $customer->cardTopUpRequests()
+                ->when($filter->status, function($query) use ($filter) {
+                    $query->status($filter->status);
+                })
+                ->with(['user', 'card' => ['owner']])
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
                 ->withQueryString()
@@ -58,6 +74,8 @@ class CustomerRepository {
     
     public function show(User $customer) {
         
+        $customer = $customer->load(['cardRequests', 'cardTopUpRequests', 'owner']);
+
         return new CustomerResource($customer);
        
     }

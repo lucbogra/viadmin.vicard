@@ -19,6 +19,26 @@ export default {
                 quicksand: 'Quicksand',
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                navbar: {
+                    900: "#1f2937",
+                    800: "#111827",
+                },
+                primary: {
+                    900: "#243262",
+                    800: "#0a6189",
+                    700: "#18529d",
+                    600: "#2d6aab",
+                    500: "#5490c6",
+                },
+                secondary: {
+                    900: "#318baa",
+                    800: "#4c86c4",
+                    700: "#73a2ce",
+                    600: "#96c0e0",
+                    500: "#636f93",
+                },
+            },
         },
     },
 

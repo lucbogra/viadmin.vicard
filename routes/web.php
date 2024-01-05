@@ -24,16 +24,23 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::prefix('customers/{customer}')->name('customers.')->group(function() {
+
         Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
 
-        Route::get('card-requests', [CustomerController::class, 'cardrequests'])->name('card-requests.index');
+        Route::get('card-requests', [CustomerController::class, 'cardRequests'])->name('card-requests.index');
         Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
+        
+        Route::get('topup-requests', [CustomerController::class, 'cardTopupRequests'])->name('topup-requests.index');
+        Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('card-requests.update');
 
-        Route::get('topup-requests', [CustomerController::class, 'cardrequests'])->name('topup-requests.index');
     });
 
+    Route::get('topup-requests', [CustomerController::class, 'cardrequests'])->name('topup-requests.index');
+
     Route::prefix('settings')->name('settings.')->group(function() {
+
         Route::resource('banks', BankController::class);
+
     });
 
     Route::resource('/customers', CustomerController::class);
