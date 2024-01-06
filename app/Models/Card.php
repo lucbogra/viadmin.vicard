@@ -34,6 +34,12 @@ class Card extends Model
         "card_fees"             => Money::class
     ];
 
+    public function scopeStatus($builder, $filter) {
+
+        $builder->where('card_status', $filter);
+        
+    }
+
     public function owner() : BelongsTo {
         return $this->belongsTo(User::class, 'owner_id');
     }

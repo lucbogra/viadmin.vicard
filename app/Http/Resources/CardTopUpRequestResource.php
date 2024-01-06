@@ -19,6 +19,7 @@ class CardTopUpRequestResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->whenLoaded('user')),
             'card' => new CardResource($this->whenLoaded('card')),
+            'transaction' => new TransactionResource($this->whenLoaded('transaction')),
             'attachments' => $this->attachments,
             'status' => [
                 'key' => $this->status,

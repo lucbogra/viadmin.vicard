@@ -34,10 +34,10 @@ watch(filterForm, debounce(term => {
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Customer Lists">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                Customer Lists
             </h2>
         </template>
 
@@ -155,7 +155,14 @@ watch(filterForm, debounce(term => {
                             <TBodyTd>
                                 <Avatar :image="customer.avatar" icon="bx:user" />    
                             </TBodyTd>
-                            <TBodyTd :label="customer.name" />
+                            <TBodyTd>
+                                <div class="flex items-center space-x-1">
+                                    <span style="font-size: .7em;" class="w-5 h-5 rounded-full bg-orange-400 text-white inline-flex justify-center items-center" v-if="customer?.notifs?.total_notifs">
+                                        {{ customer.notifs.total_notifs }}
+                                    </span>
+                                    <span>{{ customer.name }}</span>
+                                </div>
+                            </TBodyTd>
                             <TBodyTd :label="customer.email" />
                             <TBodyTd :label="customer.role?.name" />
                             <TBodyTd :label="customer?.created_at?.formatted" />

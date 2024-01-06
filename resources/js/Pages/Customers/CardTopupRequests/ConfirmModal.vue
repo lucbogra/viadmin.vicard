@@ -2,7 +2,23 @@
     <DialogModal :show="showModal" maxWidth="lg" @close="modalOnClose">
 
         <template #content>
-            <div class="space-y-4 flex flex-col items-center">
+
+            <div v-if="mode == 'show'" class="space-y-4 flex flex-col items-center">
+                <h4 class="text-center font-semibold uppercase">{{ $t('Topup Request Details') }}</h4>
+
+                <div class="w-24 h-24 flex justify-center items-center">
+                    <img :src="RequestsIcon" class="h-16 w-16" />
+                </div>
+
+                <div class="grid gap-4 w-full" :class="{'grid-cols-2': cardRequest.attachments.length > 1}" v-if="cardRequest">
+                    <a  target="_blank" :href="attachment.file" v-for="(attachment, index) of cardRequest.attachments" :key="index" class="overflow-hidden border h-32 flex flex-col justify-center items-center group p-4 space-y-3">
+                        <Icon :icon="getIcon(attachment.name)" class="w-12 h-12 scale-100 group-hover:scale-110 transition-all duration-300" />
+                        <h5 class="truncate px-2 font-bold">{{ attachment.name }}</h5>
+                    </a>
+                </div>
+            </div>
+
+            <div v-else class="space-y-4 flex flex-col items-center">
                 <h4 class="text-center font-semibold uppercase">{{ $t('Card Request') }}</h4>
 
                 <div class="w-24 h-24 flex justify-center items-center">
@@ -78,6 +94,7 @@
             default: false
         },
         customer: Object,
+        mode: String,
         cardRequest: Object,
     })
 
@@ -101,7 +118,7 @@
     const submit = () => {
         form._method = 'PUT'
 
-        form.put(route('customers.card-requests.update', {customer: props.customer, card_request: props.cardRequest}), {
+        form.put(route('customers.topup-requests.update', {customer: props.customer, card_request: props.cardRequest}), {
             preserveState: true,
             onSuccess: () => {
                 ElMessage.success(usePage().props?.flash?.success)
@@ -110,6 +127,24 @@
             },
             onError: () => {},
         })
+
+    }
+
+    const getIcon = (file) => {
+        
+        const ext = file.split('.').pop()
+
+        if (['pdf', 'PDF'].includes(ext)) {
+
+            return 'bi:file-earmark-pdf'
+
+        } else if (['jpeg', 'jpg', 'JPEG', 'JPG', 'png', 'PNG'].includes(ext)) {
+
+            return 'bi:file-earmark-image'
+            
+        }
+
+        return 'pepicons-print:file'
 
     }
 

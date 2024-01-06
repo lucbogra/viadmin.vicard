@@ -28,9 +28,13 @@ class CustomerResource extends JsonResource
     }
 
     private function notifs() {
+        $reqCounts = $this->cardRequests()->where('status', 'pending')->count();
+        $topupReqCounts = $this->cardTopUpRequests()->where('status', 'pending')->count();
+        
         return [
-            "card_requests_count" => $this->cardRequests()->where('status', 'pending')->count(),
-            "card_topup_requests_count" => $this->cardTopUpRequests()->where('status', 'pending')->count()
+            "card_requests_count" => $reqCounts,
+            "card_topup_requests_count" => $topupReqCounts,
+            "total_notifs" => $reqCounts + $topupReqCounts
         ];
     }
 }

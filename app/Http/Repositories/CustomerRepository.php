@@ -28,12 +28,12 @@ class CustomerRepository {
     }
 
     public function allCards(User $customer, FilterObject $filter) {
-
+  
         return CardResource::collection(
             $customer->cards()
-                // ->when($filter->status, function($query) use ($filter) {
-                //     $query->status($filter->status);
-                // })
+                ->when($filter->status, function($query) use ($filter) {
+                    $query->status($filter->status);
+                })
                 ->with('owner')
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
@@ -64,7 +64,7 @@ class CustomerRepository {
                 ->when($filter->status, function($query) use ($filter) {
                     $query->status($filter->status);
                 })
-                ->with(['user', 'card' => ['owner']])
+                ->with(['user', 'transaction', 'card' => ['owner']])
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
                 ->withQueryString()

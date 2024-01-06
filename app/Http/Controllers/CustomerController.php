@@ -18,6 +18,7 @@ use App\Http\Requests\CardRequestRequest;
 use App\Http\Repositories\CustomerRepository;
 use App\Http\Requests\CardTopupRequestRequest;
 use App\Models\CardTopUpRequest;
+use App\Models\Transaction;
 
 class CustomerController extends Controller
 {
@@ -70,11 +71,13 @@ class CustomerController extends Controller
      */
     public function show(User $customer)
     {
-        $breadcrumbs = Breadcrumbs::generate("customers.show", $customer);
+        return $this->cards($customer);
 
-        $customer = $this->customerRepository->show($customer);
+        // $breadcrumbs = Breadcrumbs::generate("customers.show", $customer);
 
-        return Inertia::render("Customers/Show", compact("customer", "breadcrumbs"));
+        // $customer = $this->customerRepository->show($customer);
+
+        // return Inertia::render("Customers/Show", compact("customer", "breadcrumbs"));
     }
 
     /**
@@ -193,10 +196,17 @@ class CustomerController extends Controller
     {
         if ($cardTopupRequestRequest->status == 'validated') {
 
-            $amount = $cardRequest->card->card_balance->getMinorAmount()->toInt() + $cardTopupRequestRequest->amount;
+            $transaction = $cardRequest->card->transactions()->create([
+                'user_id' => auth()->id(),
+                'type' => 'deposit',
+                'method' => 'bank transfer',
+                'date' => today(),
+                'amount' => $cardTopupRequestRequest->amount,
+                'currency' => 'USD',
+            ]);
 
-            $cardRequest->card()->update([
-                'card_balance' => $amount,
+            $cardRequest->update([
+                'transaction_id' => $transaction->id
             ]);
 
         }

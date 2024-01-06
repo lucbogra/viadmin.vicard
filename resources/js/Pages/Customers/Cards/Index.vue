@@ -35,7 +35,7 @@ const selectedItem = ref(null)
 const filterForm = buildFilterForm(props.filter);
 
 watch(filterForm, debounce(term => {
-    handleFilter(route('customers.card-requests.index', {customer: props.customer.data}), filterForm);
+    handleFilter(route('customers.cards.index', {customer: props.customer.data}), filterForm);
 }, 500))
 </script>
 
@@ -83,9 +83,10 @@ watch(filterForm, debounce(term => {
             
                                     <div class="h-10 flex-1 w-full">
                                         <el-select v-model="filterForm.status" placeholder="Filter by status" size="large">
-                                            <el-option value="pending" label="Pending" />
-                                            <el-option value="validated" label="Validated" />
-                                            <el-option value="cancelled" label="Cancelled" />
+                                            <el-option :value="null" label="*" />
+                                            <el-option value="activated" label="Activated" />
+                                            <el-option value="not activated" label="Not activated" />
+                                            <el-option value="frozen" label="Frozen" />
                                         </el-select>
                                     </div>
                     

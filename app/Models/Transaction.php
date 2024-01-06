@@ -17,12 +17,15 @@ class Transaction extends Model
     use SoftDeletes;
     use HasPerformer;
 
+    protected $guarded = [];
+
     const TYPE = ['deposit', 'withdraw'];
 
     const METHOD = ['commission', 'bank transfer'];
 
-    protected $cast = [
-        "amount" => Money::class
+    protected $casts = [
+        "amount" => Money::class,
+        "date" => 'date:Y-m-d',
     ];
 
     public function card() : BelongsTo {

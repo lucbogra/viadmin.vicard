@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LinkButton from '@/Components/LinkButton.vue';
 import ProfileHeader from '../ProfileHeader.vue';
-import ConfirmModal from './ConfirmModal.vue';
+// import ConfirmModal from './ConfirmModal.vue';
 import ActionLinkButton from '@/Components/ActionLinkButton.vue';
 import EmptyIcon from '@/Components/Icons/empty.svg';
 import RequestsIcon from '@/Components/Icons/wallet-add.svg';
@@ -29,7 +29,6 @@ const props = defineProps({
     breadcrumbs: Array,
 });
 
-const mode = ref(null)
 const showModal = ref(false)
 const selectedItem = ref(null)
 
@@ -119,18 +118,18 @@ watch(filterForm, debounce(term => {
                                         <span>{{ req.card?.card_number }}</span>
                                     </h1>
                                     <h1 v-if="req.transaction" class="flex items-center space-x-1">
-                                        <Icon icon="mynaui:credit-card-plus" class="w-4 h-4" />
+                                        <Icon icon="solar:card-broken" class="w-4 h-4" />
                                         <span>{{ req.transaction.amount.amount }}</span>
                                     </h1>
                                     <h1 class="flex items-center space-x-1">
-                                        <Icon icon="ph:user" class="w-4 h-4" />
+                                        <Icon icon="solar:card-broken" class="w-4 h-4" />
                                         <span>{{ req.card?.owner?.name }}</span>
                                     </h1>
                                 </div>
                             </TBodyTd>
 
                             <TBodyTd>
-                                <span class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedItem = req, showModal = true, mode = 'show'">
+                                <span class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedRequest = req, showModal = true, mode = 'show'">
                                     <Icon icon="ic:baseline-attach-file" class="w-4 h-4" />
                                     <span>{{ req.attachments.length }} files</span>
                                 </span>
@@ -151,7 +150,7 @@ watch(filterForm, debounce(term => {
 
                             <TBodyTd class="space-x-1 flex justify-end">
 
-                                <ActionLinkButton v-if="req.status.key == 'pending'" title="Manage request" button-icon="ci:file-check" action="edit" type="button" @click="selectedItem = req, mode = null, showModal = true" />
+                                <ActionLinkButton v-if="req.status.key == 'pending'" title="Manage request" button-icon="ci:file-check" action="edit" type="button" @click="selectedItem = req, showModal = true" />
                             
                             </TBodyTd>
                         </TBodyTr>
@@ -161,8 +160,7 @@ watch(filterForm, debounce(term => {
             </div>
         </div>
 
-        {{ selectedItem }}
-        <ConfirmModal :showModal="showModal" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" :mode="mode" />
+        <ConfirmModal :showModal="showModal" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" />
      
     </AppLayout>
 </template>

@@ -158,6 +158,8 @@
     const submit = () => {
         form._method = 'PUT'
 
+        // alert(route('customers.card-requests.update', {customer: props.customer, card_request: props.cardRequest}))
+
         form.put(route('customers.card-requests.update', {customer: props.customer, card_request: props.cardRequest}), {
             preserveState: true,
             onSuccess: () => {

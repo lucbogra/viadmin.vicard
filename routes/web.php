@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
         
         Route::get('topup-requests', [CustomerController::class, 'cardTopupRequests'])->name('topup-requests.index');
-        Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('card-requests.update');
+        Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('topup-requests.update');
 
     });
 

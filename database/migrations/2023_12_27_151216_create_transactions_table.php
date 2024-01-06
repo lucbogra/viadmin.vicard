@@ -18,10 +18,10 @@ return new class extends Migration
             $table->enum('type', Transaction::TYPE);
             $table->enum('method', Transaction::METHOD);
             $table->date('date');
-            $table->string('merchant');
+            $table->string('merchant')->nullable();
             $table->decimal('amount', 64, 0);
             $table->string('currency')->default('USD');
-            $table->json('receips');
+            $table->json('receips')->nullable();
             $table->boolean('confirmed');
             $table->timestamps();
             $table->softDeletes();

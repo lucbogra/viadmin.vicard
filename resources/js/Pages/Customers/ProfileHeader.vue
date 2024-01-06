@@ -38,7 +38,7 @@ const props = defineProps({
                                             <span>{{ customer.email }}</span>
                                         </p>
                                         <p class="m-0 p-O flex items-center space-x-1">
-                                            <Icon icon="solar:phone-linear" />
+                                            <Icon icon="ic:round-work-outline" />
                                             <span>{{ customer.role?.name }}</span>
                                         </p>
                                     </div>
@@ -76,14 +76,14 @@ const props = defineProps({
 
                 <div class="flex space-x-2">
 
-                    <NavLink class="space-x-1" :href="route('customers.show', {customer: customer})"
+                    <!-- <NavLink class="space-x-1" :href="route('customers.show', {customer: customer})"
                             :active="route().current('customers.show')">
-                        <Icon icon="bx:user" class="h-4 w-4" />
-                        <span>Profile</span>
-                    </NavLink>
+                        <Icon icon="icon-park-outline:transaction" class="h-4 w-4" />
+                        <span>Transactions</span>
+                    </NavLink> -->
 
                     <NavLink class="space-x-1" :href="route('customers.cards.index', {customer: customer})"
-                            :active="route().current('customers.cards.index')">
+                            :active="route().current('customers.cards.index') || route().current('customers.show')">
                         <Icon icon="ion:card-outline" class="h-4 w-4" />
                         <span>Cards</span>
                     </NavLink>
