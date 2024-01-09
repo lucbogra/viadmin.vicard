@@ -20,6 +20,7 @@ class CustomerRepository {
                 ->when($filter->term, function($query) use ($filter) {
                         $query->search($filter->term);
                 })
+                ->withCount('cards')
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
                 ->withQueryString()

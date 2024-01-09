@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\CardRequest;
+use App\Models\CardTopUpRequest;
+
 class AppMenu {
 
     public function render(): array {
@@ -22,7 +25,8 @@ class AppMenu {
                         "url"     => route("dashboard"), 
                         "icon"    => "ant-design:home-outlined",
                         "current" => request()->routeIs('dashboard'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => null
                     ],  
 
                     [
@@ -30,15 +34,17 @@ class AppMenu {
                         "url"     => route("customers.index"), 
                         "icon"    => "ci:users-group",
                         "current" => request()->routeIs('customers.*'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => null
                     ], 
 
                     [
                         "name"    => __("Cards"), 
-                        "url"     => route("dashboard"), 
-                        "icon"    => "ion:card-outline",
+                        "url"     => route("cards.index"), 
+                        "icon"    => "wpf:bank-cards",
                         "current" => request()->routeIs('cards.*'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => null
                     ],    
                 ]
             ],
@@ -48,17 +54,25 @@ class AppMenu {
                 "items" => [
                     [
                         "name"    => __("Card Requests"), 
-                        "url"     => route("dashboard"), 
+                        "url"     => route("card-requests.index"), 
                         "icon"    => "carbon:intent-request-scale-in",
                         "current" => request()->routeIs('card-requests.*'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => [
+                            "type" => "info",
+                            "value" => CardRequest::pending()->count()
+                        ]
                     ],    
                     [
                         "name"    => __("Topup Requests"), 
                         "url"     => route("topup-requests.index"), 
                         "icon"    => "majesticons:money-plus-line",
                         "current" => request()->routeIs('topup-requests.*'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => [
+                            "type" => "info",
+                            "value" => CardTopUpRequest::pending()->count()
+                        ]
                     ],    
                 ]
             ],
@@ -71,7 +85,8 @@ class AppMenu {
                         "url"     => route("settings.banks.index"), 
                         "icon"    => "basil:bank-solid",
                         "current" => request()->routeIs('settings.banks.*'), 
-                        "subMenu" => []
+                        "subMenu" => [],
+                        "badge"   => null
                     ],    
       
                 ]

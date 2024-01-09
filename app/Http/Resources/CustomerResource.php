@@ -20,6 +20,7 @@ class CustomerResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'avatar' => $this->avatar,
+            'card_counts' => $this->whenCounted('cards'),
             'notifs' => $this->notifs(),
             'role' => $this->roles->first(),
             'created_at' => (new AppService)->dateFormatter($this->created_at),

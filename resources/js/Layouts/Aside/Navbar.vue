@@ -2,7 +2,7 @@
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog as="div" class="relative z-40 lg:hidden" @close="$emit('close')">
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
-          <div class="fixed inset-0 bg-gray-600 bg-opacity-75" />
+          <div class="fixed inset-0 bg-gray-00 bg-opacity-75" />
         </TransitionChild>
 
         <div class="fixed inset-0 z-40 flex">
@@ -25,7 +25,7 @@
               </div>
               <nav class="mt-5 h-full flex-shrink-0 divide-y divide-navbar-800 overflow-y-auto" aria-label="Sidebar">
                 <div class="space-y-1 px-2">
-                  <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-navbar-800 text-white' : 'text-cyan-100 hover:bg-cyan-600 hover:text-white', 'group flex items-center rounded-md px-2 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
+                  <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-navbar-100 text-white' : 'text-cyan-100 hover:bg-cyan-600 hover:text-white', 'group flex items-center rounded-md px-2 py-2 text-base font-medium']" :aria-current="item.current ? 'page' : undefined">
                     <component :is="item.icon" class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" aria-hidden="true" />
                     {{ item.name }}
                   </a>

@@ -45,9 +45,10 @@ watch(filterForm, debounce(term => {
             
         <div class="mb-6">
     
-            <div class=" bg-white mx-10 p-10">
+            <div class=" bg-white mx-10 py-10">
     
                 <Table
+                    :bordered="false"
                     :loading="tableLoading"
                     :items="customers"
                     :per-page="filterForm.per_page"
@@ -77,7 +78,7 @@ watch(filterForm, debounce(term => {
                     </template>
 
                     <template #search>
-                        <div class="flex items-center space-x-4 mb-6" v-if="customers.data?.length">
+                        <div class="flex items-center space-x-4 mb-6 px-10" v-if="customers.data?.length">
                             <div class="flex-1">
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0">
                                     <LinkButton
@@ -147,6 +148,7 @@ watch(filterForm, debounce(term => {
                             />
                             <THeadTd :label="$t('Role')" />
                             <THeadTd :label="$t('Date')" />
+                            <THeadTd :label="$t('Cards')" />
                             <THeadTd :label="$t('actions')" position="end"
                             />
                         </THeadTr>
@@ -166,6 +168,12 @@ watch(filterForm, debounce(term => {
                             <TBodyTd :label="customer.email" />
                             <TBodyTd :label="customer.role?.name" />
                             <TBodyTd :label="customer?.created_at?.formatted" />
+                            <TBodyTd>
+                                <div v-if="customer?.card_counts" class="flex items-center space-x-1">
+                                    <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
+                                    <span>{{ customer?.card_counts }}</span>
+                                </div>
+                            </TBodyTd>
                             <TBodyTd class="space-x-1 flex justify-end">
 
                                 <ActionLinkButton action="show" :href="route('customers.show', customer)" />

@@ -71,9 +71,9 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    const CUSTOMERS_ROLE_LISTS = ['Account Manager', 'Account Owner', 'Member'];
+    const CUSTOMERS_ROLE_LISTS = ['Account Owner', 'Member'];
     
-    const ADMINS_ROLE_LISTS = ['Admin'];
+    const ADMINS_ROLE_LISTS = ['Admin', 'Account Manager'];
 
     public function scopeSearch($builder, $term) {
         $builder->where("name", "LIKE", "%$term%")

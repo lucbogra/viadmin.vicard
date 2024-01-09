@@ -55,7 +55,7 @@
             menu.current 
             ? 'bg-gray-900 text-white hover:bg-gray-700' 
             : 'text-gray-100 hover:bg-gray-900 hover:text-white', 
-            'group flex items-center rounded-md px-3 py-3 text-sm font-medium leading-6'
+            'group flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium leading-6'
         ]" 
         :aria-current="
             menu.current 
@@ -63,8 +63,19 @@
             : undefined" 
         :href="menu.url"
     >
-        <Icon :icon="menu.icon" class="mr-4 h-5 w-5 flex-shrink-0 text-gray-200" />
-        <span class="rtl:ms-2">{{ menu.name }}</span>
+        <div class="flex items-center">
+            <Icon :icon="menu.icon" class="mr-4 h-5 w-5 flex-shrink-0 text-gray-200" />
+            <span class="rtl:ms-2">{{ menu.name }}</span>
+        </div>
+        <div>
+            <span v-if="menu.badge?.value" :class="{
+                    'bg-orange-500 text-white': menu.badge.type == 'info'
+                }" class="inline-flex w-5 h-5 rounded-full items-center justify-center"
+                    style="font-size: .7em;"
+                >
+                {{ menu.badge.value }}
+            </span>
+        </div>
     
     </Link>
 

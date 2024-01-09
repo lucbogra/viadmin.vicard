@@ -24,6 +24,10 @@ class CardTopUpRequest extends Model
         
     }
 
+    public function scopePending($query) {
+        $query->where('status', 'pending');
+    }
+
     public function card(): BelongsTo {
 
         return $this->belongsTo(Card::class);

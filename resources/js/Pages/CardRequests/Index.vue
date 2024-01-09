@@ -1,11 +1,11 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LinkButton from '@/Components/LinkButton.vue';
-import ProfileHeader from '../ProfileHeader.vue';
-import ConfirmModal from './ConfirmModal.vue';
+import DetailModal from '../Customers/CardRequests/DetailModal.vue';
+import ConfirmModal from '../Customers/CardRequests/ConfirmModal.vue';
+import RequestsIcon from '@/Components/Icons/wallet-add.svg';
 import ActionLinkButton from '@/Components/ActionLinkButton.vue';
 import EmptyIcon from '@/Components/Icons/empty.svg';
-import RequestsIcon from '@/Components/Icons/wallet-add.svg';
 import debounce from 'lodash/debounce';
 import { Icon } from '@iconify/vue';
 import Avatar from '@/Components/Avatar.vue';
@@ -21,40 +21,38 @@ import {
     buildFilterForm,
     tableLoading
 } from "@/Components/Table";
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
-    cardTopupRequests: Object,
-    customer: Object,
+    cardRequests: Object,
     filter: Object,
     breadcrumbs: Array,
 });
 
-const mode = ref(null)
 const showModal = ref(false)
+const modal = ref('form')
 const selectedItem = ref(null)
 
 const filterForm = buildFilterForm(props.filter);
 
 watch(filterForm, debounce(term => {
-    handleFilter(route('customers.topup-requests.index', {customer: props.customer.data}), filterForm);
+    handleFilter(route('card-requests.index'), filterForm);
 }, 500))
 </script>
 
 <template>
     <AppLayout :title="$t('Card Requests')">
-            
-        <ProfileHeader :customer="customer.data" :breadcrumbs="breadcrumbs" />
-  
+              
         <div class="my-6">
     
-            <div class=" bg-white mx-10 py-10">
+            <div class=" bg-white mx-10 p-10">
 
-                <h5 class="mb-5 text-xl font-bold px-10">TopUp requests</h5>
+                <h5 class="mb-5 text-xl font-bold">Card requests</h5>
     
                 <Table
-                    :loading="tableLoading"
                     :bordered="false"
-                    :items="cardTopupRequests"
+                    :loading="tableLoading"
+                    :items="cardRequests"
                     :per-page="filterForm.per_page"
                     @update-per-page="
                         (newValue) => (filterForm.per_page = newValue)
@@ -79,7 +77,7 @@ watch(filterForm, debounce(term => {
                     </template>
 
                     <template #search>
-                        <div class="flex items-center space-x-4 mb-6 px-10">
+                        <div class="flex items-center space-x-4 mb-6">
                             <div class="flex-1">
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0">
             
@@ -100,45 +98,17 @@ watch(filterForm, debounce(term => {
 
                     <template v-slot="{ items } = slotProps">
                         <THeadTr>
-                            <THeadTd :label="$t('Card Infos')" />
-                            <THeadTd :label="$t('Date')" />
-                            <THeadTd :label="$t('Files')" />
+                            <THeadTd :label="$t('User')" />
                             <THeadTd :label="$t('Status')" />
+                            <THeadTd :label="$t('Date')" />
                             <THeadTd :label="$t('actions')" position="end"
                             />
                         </THeadTr>
 
                         <TBodyTr v-for="(req, index) of items" :key="index">
                             <TBodyTd>
-                                <div class="text-xs bg-gray-500 py-2 rounded text-white px-2 relative">
-                                    <div class="absolute top-0 right-0 p-2">
-                                        <Icon icon="solar:card-broken" class="h-6 w-6" />
-                                        <!-- <Icon icon="flat-color-icons:sim-card-chip" class="h-10 w-10" /> -->
-                                    </div>
-                                    <h1 class="flex items-center space-x-1">
-                                        <Icon icon="solar:card-broken" class="w-4 h-4" />
-                                        <span>{{ req.card?.card_number }}</span>
-                                    </h1>
-                                    <h1 v-if="req.transaction" class="flex items-center space-x-1">
-                                        <Icon icon="mynaui:credit-card-plus" class="w-4 h-4" />
-                                        <span>{{ req.transaction.amount.amount }}</span>
-                                    </h1>
-                                    <h1 class="flex items-center space-x-1">
-                                        <Icon icon="ph:user" class="w-4 h-4" />
-                                        <span>{{ req.card?.owner?.name }}</span>
-                                    </h1>
-                                </div>
+                                <Link class="hover:text-blue-600 hover:font-semibold" :href="route('customers.show', req.user)">{{ req.user.name }}</Link>
                             </TBodyTd>
-
-                            <TBodyTd>
-                                <span class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedItem = req, showModal = true, mode = 'show'">
-                                    <Icon icon="ic:baseline-attach-file" class="w-4 h-4" />
-                                    <span>{{ req.attachments.length }} files</span>
-                                </span>
-                            </TBodyTd>
-
-                            <TBodyTd :label="req?.created_at?.formatted" />
-
                             <TBodyTd>
                                 <span class="py-1 px-2 border rounded text-xs" 
                                         :class="{
@@ -149,10 +119,11 @@ watch(filterForm, debounce(term => {
                                     {{ req.status.label }}
                                 </span>
                             </TBodyTd>
-
+                            <TBodyTd :label="req?.created_at?.formatted" />
                             <TBodyTd class="space-x-1 flex justify-end">
 
-                                <ActionLinkButton v-if="req.status.key == 'pending'" title="Manage request" button-icon="ci:file-check" action="edit" type="button" @click="selectedItem = req, mode = null, showModal = true" />
+                                <ActionLinkButton v-if="req.status.key == 'pending'" action="edit" button-icon="mdi:list-status" type="button" @click="selectedItem = req, modal = 'form', showModal = true" />
+                                <ActionLinkButton action="show" type="button" @click="selectedItem = req, modal = 'details', showModal = true" />
                             
                             </TBodyTd>
                         </TBodyTr>
@@ -162,8 +133,8 @@ watch(filterForm, debounce(term => {
             </div>
         </div>
 
-        <!-- {{ selectedItem }} -->
-        <ConfirmModal :showModal="showModal" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" :mode="mode" />
+        <DetailModal :showModal="showModal && modal == 'details'" :card-request="selectedItem" @on-modal-close="showModal = false" />
+        <ConfirmModal :showModal="showModal && modal == 'form'" :customer="selectedItem?.user" :card-request="selectedItem" @on-modal-close="showModal = false" />
      
     </AppLayout>
 </template>

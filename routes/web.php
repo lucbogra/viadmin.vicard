@@ -1,9 +1,9 @@
 <?php
 
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 
@@ -35,7 +35,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     });
 
-    Route::get('topup-requests', [CustomerController::class, 'cardrequests'])->name('topup-requests.index');
+    Route::resource('/customers', CustomerController::class);
+
+    Route::get('card-requests', [RequestController::class, 'cardRequests'])->name('card-requests.index');
+    
+    Route::get('topup-requests', [RequestController::class, 'topupRequests'])->name('topup-requests.index');
+    
+    Route::get('cards', [CardController::class, 'index'])->name('cards.index');
 
     Route::prefix('settings')->name('settings.')->group(function() {
 
@@ -43,6 +49,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     });
 
-    Route::resource('/customers', CustomerController::class);
+
 
 });

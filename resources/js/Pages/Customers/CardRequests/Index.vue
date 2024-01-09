@@ -2,6 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LinkButton from '@/Components/LinkButton.vue';
 import ProfileHeader from '../ProfileHeader.vue';
+import DetailModal from './DetailModal.vue';
 import ConfirmModal from './ConfirmModal.vue';
 import RequestsIcon from '@/Components/Icons/wallet-add.svg';
 import ActionLinkButton from '@/Components/ActionLinkButton.vue';
@@ -30,6 +31,7 @@ const props = defineProps({
 });
 
 const showModal = ref(false)
+const modal = ref('form')
 const selectedItem = ref(null)
 
 const filterForm = buildFilterForm(props.filter);
@@ -46,11 +48,12 @@ watch(filterForm, debounce(term => {
   
         <div class="my-6">
     
-            <div class=" bg-white mx-10 p-10">
+            <div class=" bg-white mx-10 py-10">
 
-                <h5 class="mb-5 text-xl font-bold">Card requests</h5>
+                <h5 class="mb-5 text-xl font-bold px-10">Card requests</h5>
     
                 <Table
+                    :bordered="false"
                     :loading="tableLoading"
                     :items="cardRequests"
                     :per-page="filterForm.per_page"
@@ -77,13 +80,13 @@ watch(filterForm, debounce(term => {
                     </template>
 
                     <template #search>
-                        <div class="flex items-center space-x-4 mb-6">
+                        <div class="flex items-center space-x-4 mb-6 px-10">
                             <div class="flex-1">
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0">
             
                                     <div class="h-10 flex-1 w-full">
-                                        <el-select v-model="filterForm.status" placeholder="Filter by status" size="large">
-                                            <el-option :value="null" label="*" />
+                                        <el-select v-model="filterForm.status" placeholder="Filter by status" size="large" class="w-28">
+                                            <el-option :value="null" label="Status *" />
                                             <el-option value="pending" label="Pending" />
                                             <el-option value="validated" label="Validated" />
                                             <el-option value="cancelled" label="Cancelled" />
@@ -120,7 +123,8 @@ watch(filterForm, debounce(term => {
                             <TBodyTd :label="req?.created_at?.formatted" />
                             <TBodyTd class="space-x-1 flex justify-end">
 
-                                <ActionLinkButton v-if="req.status.key == 'pending'" action="edit" type="button" @click="selectedItem = req, showModal = true" />
+                                <ActionLinkButton v-if="req.status.key == 'pending'" action="edit" button-icon="mdi:list-status" type="button" @click="selectedItem = req, modal = 'form', showModal = true" />
+                                <ActionLinkButton action="show" type="button" @click="selectedItem = req, modal = 'details', showModal = true" />
                             
                             </TBodyTd>
                         </TBodyTr>
@@ -130,7 +134,8 @@ watch(filterForm, debounce(term => {
             </div>
         </div>
 
-        <ConfirmModal :showModal="showModal" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" />
+        <DetailModal :showModal="showModal && modal == 'details'" :card-request="selectedItem" @on-modal-close="showModal = false" />
+        <ConfirmModal :showModal="showModal && modal == 'form'" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" />
      
     </AppLayout>
 </template>

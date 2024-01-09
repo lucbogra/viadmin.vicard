@@ -41,7 +41,7 @@ const updatePerPage = (newValue) => {
 
         <div v-if="items?.data?.length > 0" class="overflow-auto w-full">
 
-            <div class="w-full rounded overflow-auto" :class="{'rounded': rounded, 'border': bordered, 'relative': loading}">
+            <div class="w-full rounded overflow-auto" :class="{'rounded': rounded, 'border border-gray-800': bordered, 'relative': loading}">
                 <div v-if="loading" class="absolute inset-0 w-full h-full bg-gray-200 opacity-50">
                     <div class="w-full h-full flex justify-center items-center">
                         <ProcessingLoader class="w-20" />

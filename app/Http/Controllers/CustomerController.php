@@ -59,7 +59,7 @@ class CustomerController extends Controller
 
         $customer = User::create($newCustomer);
 
-        $customer->assignRole('Account Manager');
+        $customer->assignRole('Account Owner');
 
         Mail::to($customer)->send(new UserLoginInfoMail(user: $customer, password: $request->password));
 

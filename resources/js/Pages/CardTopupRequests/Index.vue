@@ -1,8 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import LinkButton from '@/Components/LinkButton.vue';
-import ProfileHeader from '../ProfileHeader.vue';
-import ConfirmModal from './ConfirmModal.vue';
+import ConfirmModal from '../Customers/CardTopupRequests/ConfirmModal.vue';
 import ActionLinkButton from '@/Components/ActionLinkButton.vue';
 import EmptyIcon from '@/Components/Icons/empty.svg';
 import RequestsIcon from '@/Components/Icons/wallet-add.svg';
@@ -24,7 +23,6 @@ import {
 
 const props = defineProps({
     cardTopupRequests: Object,
-    customer: Object,
     filter: Object,
     breadcrumbs: Array,
 });
@@ -42,9 +40,7 @@ watch(filterForm, debounce(term => {
 
 <template>
     <AppLayout :title="$t('Card Requests')">
-            
-        <ProfileHeader :customer="customer.data" :breadcrumbs="breadcrumbs" />
-  
+              
         <div class="my-6">
     
             <div class=" bg-white mx-10 py-10">
@@ -162,8 +158,7 @@ watch(filterForm, debounce(term => {
             </div>
         </div>
 
-        <!-- {{ selectedItem }} -->
-        <ConfirmModal :showModal="showModal" :customer="customer.data" :card-request="selectedItem" @on-modal-close="showModal = false" :mode="mode" />
+        <ConfirmModal :showModal="showModal" :customer="selectedItem?.user" :card-request="selectedItem" @on-modal-close="showModal = false" :mode="mode" />
      
     </AppLayout>
 </template>

@@ -30,7 +30,7 @@ const emit = defineEmits(['onSort']);
 </script>
 
 <template>
-    <th class="py-4 px-4 font-bold text-gray-400 text-left tracking-normal text-xs">
+    <th class="py-4 px-4 font-bold text-left tracking-normal text-xs">
         
         <div class="flex space-x-1 items-center" 
             :class="[{'cursor-pointer': sortBy != null, 'text-gray-900 font-extrabold': (sortBy != null && sortBy == currentSortKey)}, positionClass]"

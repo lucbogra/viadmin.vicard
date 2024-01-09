@@ -47,10 +47,11 @@ watch(filterForm, debounce(term => {
         <div class="my-6">
 
             
-            <div class=" bg-white mx-10 p-10">
-                <h5 class="mb-5 text-xl font-bold">List of cards</h5>
+            <div class=" bg-white mx-10 py-10">
+                <h5 class="mb-5 text-xl font-bold px-10">List of cards</h5>
     
                 <Table
+                    :bordered="false"
                     :loading="tableLoading"
                     :items="cards"
                     :per-page="filterForm.per_page"
@@ -77,7 +78,7 @@ watch(filterForm, debounce(term => {
                     </template>
 
                     <template #search>
-                        <div class="flex items-center space-x-4 mb-6">
+                        <div class="flex items-center space-x-4 mb-6 px-10">
                             <div class="flex-1">
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0">
             

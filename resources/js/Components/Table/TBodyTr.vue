@@ -7,7 +7,7 @@ const props =defineProps({
 
 <template>
     <thead>
-        <tr class="cursor-pointer border-b" :class="additionalSlass">
+        <tr class="cursor-pointer border-b border-gray-200" :class="additionalSlass">
             <slot />
         </tr>
     </thead>

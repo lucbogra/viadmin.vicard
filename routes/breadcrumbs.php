@@ -27,6 +27,16 @@ Breadcrumbs::for('customers.create', function (BreadcrumbTrail $trail) {
     $trail->push('New Customer', route('customers.create'));
 });
 
+Breadcrumbs::for('card-requests.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Card Requests', route('card-requests.index'));
+});
+
+Breadcrumbs::for('topup-requests.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Topup Requests', route('topup-requests.index'));
+});
+
 Breadcrumbs::for('customers.show', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.index');
     $trail->push('Show Customer', route('customers.show', $customer));
@@ -50,6 +60,11 @@ Breadcrumbs::for('customers.card-requests.index', function (BreadcrumbTrail $tra
 Breadcrumbs::for('customers.topup-requests.index', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.show', $customer);
     $trail->push('Top Up Requests', route('customers.topup-requests.index', $customer));
+});
+
+Breadcrumbs::for('cards.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Card Lists', route('cards.index'));
 });
 
 // Bank Lists

@@ -40,6 +40,10 @@ class Card extends Model
         
     }
 
+    public function scopeSearch($builder, $term) {
+        $builder->where("card_number", "like", "%$term%");
+    }
+    
     public function owner() : BelongsTo {
         return $this->belongsTo(User::class, 'owner_id');
     }

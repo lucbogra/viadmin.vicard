@@ -16,6 +16,10 @@ defineProps({
         type: Boolean,
         default: true,
     },
+    padding: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const close = () => {
@@ -30,12 +34,12 @@ const close = () => {
         :closeable="closeable"
         @close="close"
     >
-        <div class="px-6 py-4">
+        <div :class="{'px-6 py-4': padding}">
             <div class="text-lg font-medium text-gray-900">
                 <slot name="title" />
             </div>
 
-            <div class="mt-4 text-sm text-gray-600">
+            <div class="text-sm text-gray-600" :class="{'mt-4': padding}">
                 <slot name="content" />
             </div>
         </div>
