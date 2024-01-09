@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +17,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->roles->first()?->name !== "Admin") {
+        if ( !in_array(Auth::user()->roles->first()?->name, User::ADMINS_ROLE_LISTS) ) {
 
             abort(403);
 
