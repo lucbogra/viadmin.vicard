@@ -70,7 +70,7 @@ watch(filterForm, debounce(term => {
 
                         <EmptyData v-else
                             :icon="CardsIcon" 
-                            :title="$t('Card Request Lists')" 
+                            :title="$t('Card Lists')" 
                             :description="$t('There Is No Card')"
                             :showButton="false"
                         />
@@ -82,13 +82,14 @@ watch(filterForm, debounce(term => {
                             <div class="flex-1">
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0">
             
-                                    <div class="h-10 flex-1 w-full">
-                                        <el-select v-model="filterForm.status" placeholder="Filter by status" size="large">
-                                            <el-option :value="null" label="*" />
+                                    <div class="h-10 flex-1 w-full flex space-x-4">
+                                        <el-select v-model="filterForm.status" placeholder="Filter by status" size="large" class="w-32">
+                                            <el-option :value="null" label="Status *" />
                                             <el-option value="activated" label="Activated" />
                                             <el-option value="not activated" label="Not activated" />
                                             <el-option value="frozen" label="Frozen" />
                                         </el-select>
+                                        <el-input v-model="filterForm.search" placeholder="Card number" size="default" class="w-32" />
                                     </div>
                     
 
@@ -129,7 +130,7 @@ watch(filterForm, debounce(term => {
                             <TBodyTd :label="item?.created_at?.formatted" />
                             <TBodyTd class="space-x-1 flex justify-end">
 
-                                <ActionLinkButton action="show" type="button" />
+                                <ActionLinkButton action="show" type="link" :href="route('customers.cards.transactions', {customer: customer.data, card: item})" />
                             
                             </TBodyTd>
                         </TBodyTr>

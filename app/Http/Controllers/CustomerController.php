@@ -10,15 +10,18 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Objects\FilterObject;
 use App\Mail\UserLoginInfoMail;
+use App\Models\CardTopUpRequest;
+use App\Http\Resources\CardResource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CustomerRequest;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use App\Http\Resources\CustomerResource;
+use App\Objects\TransactionFilterObject;
 use App\Http\Requests\CardRequestRequest;
+use App\Http\Requests\CardWithdrawRequest;
+use App\Http\Resources\TransactionResource;
 use App\Http\Repositories\CustomerRepository;
 use App\Http\Requests\CardTopupRequestRequest;
-use App\Models\CardTopUpRequest;
-use App\Models\Transaction;
 
 class CustomerController extends Controller
 {
@@ -121,6 +124,77 @@ class CustomerController extends Controller
     }
 
     /**
+     * Handle the incoming request.
+     */
+    public function cardShow(User $customer, Card $card)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.cards.show", $customer, $card);
+
+        $filter = new FilterObject;
+
+        $customer = new CustomerResource($customer);
+        
+        $card->load('owner');
+
+        $card = new CardResource($card);
+
+        return Inertia::render("Customers/Cards/Show", compact("customer", "card", "breadcrumbs", "filter"));
+
+    }
+
+    /**
+     * Handle the incoming request.
+     */
+    public function cardTransactions(User $customer, Card $card)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.cards.transactions", $customer, $card);
+
+        $filter = new TransactionFilterObject;
+
+        $customer = new CustomerResource($customer);
+        
+        $card = new CardResource($card);
+        
+        $transactions = TransactionResource::collection(
+            $card->transactions()
+                ->when($filter->type, function($query) use ($filter) {
+                    $query->type($filter->type);
+                })
+                ->when($filter->method, function($query) use ($filter) {
+                    $query->method($filter->method);
+                })
+                ->when($filter->term, function($query) use ($filter) {
+                    $query->search($filter->term);
+                })
+                ->with('user')
+                ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
+                ->paginate($filter->perPage)
+                ->withQueryString()
+        );
+
+        return Inertia::render("Customers/Cards/Transactions", compact("customer", "card", "transactions", "breadcrumbs", "filter"));
+
+    }
+
+    /**
+     * Handle the incoming request.
+     */
+    public function cardWithdraw(User $customer, Card $card, CardWithdrawRequest $cardWithdrawRequest)
+    {
+        $transaction = $card->transactions()->create([
+            'user_id' => auth()->id(),
+            'type' => 'withdraw',
+            'method' => 'bank transfer',
+            'confirmed' => true,
+            'date' => today(),
+            'amount' => $cardWithdrawRequest->amount,
+            'currency' => 'USD',
+        ]);
+
+        return redirect()->back()->with('success', __('The card has been recharged successfully'));
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function cardRequests(User $customer)
@@ -200,6 +274,7 @@ class CustomerController extends Controller
                 'user_id' => auth()->id(),
                 'type' => 'deposit',
                 'method' => 'bank transfer',
+                'confirmed' => true,
                 'date' => today(),
                 'amount' => $cardTopupRequestRequest->amount,
                 'currency' => 'USD',

@@ -28,15 +28,39 @@ class Transaction extends Model
         "date" => 'date:Y-m-d',
     ];
 
-    public function card() : BelongsTo {
-        return $this->belongsTo(Card::class);
+    public function scopeType($builder, $filter) {
+
+        $builder->where('type', $filter);
+        
+    }
+
+    public function scopeMethod($builder, $filter) {
+
+        $builder->where('method', $filter);
+        
     }
 
     public function scopeDeposit($query) {
+
         $query->where('type', 'deposit');
+    
     }
 
     public function scopeWithdraw($query) {
+
         $query->where('type', 'withdraw');
+    
+    }
+
+    public function card() : BelongsTo {
+
+        return $this->belongsTo(Card::class);
+    
+    }
+
+    public function user() : BelongsTo {
+
+        return $this->belongsTo(User::class);
+    
     }
 }

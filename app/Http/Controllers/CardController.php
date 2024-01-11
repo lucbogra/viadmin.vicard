@@ -14,6 +14,7 @@ use App\Http\Resources\CardResource;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use App\Http\Resources\TransactionResource;
 use App\Http\Resources\CardTopUpRequestResource;
+use App\Models\User;
 
 class CardController extends Controller
 {
@@ -42,6 +43,5 @@ class CardController extends Controller
         return Inertia::render("Cards/Index", compact("cards", "breadcrumbs", "filter"));
 
     }
-    
 
 }

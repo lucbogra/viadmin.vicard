@@ -27,6 +27,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
 
+        Route::prefix('cards/{card}')->name('cards.')->group(function() {
+            Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
+            Route::get('/transactions', [CustomerController::class, 'cardTransactions'])->name('transactions');
+            Route::post('/withdraw',    [CustomerController::class, 'cardWithdraw'])->name('withdraw');
+        });
+
         Route::get('card-requests', [CustomerController::class, 'cardRequests'])->name('card-requests.index');
         Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
         

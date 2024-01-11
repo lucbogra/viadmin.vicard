@@ -48,8 +48,8 @@ class Card extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function accessUsers() : BelongsToMany {
-        return $this->belongsToMany(User::class)->withPivot('owner', 'permission');
+    public function members() : BelongsToMany {
+        return $this->belongsToMany(User::class)->withPivot('owner', 'permissions');
     }
 
     public function cardRequest() : BelongsTo {

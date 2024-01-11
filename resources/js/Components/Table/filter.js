@@ -24,6 +24,14 @@ const handleFilter = (url, data = {}) => {
         params["status"] = data.status
     }
 
+    if (data.type) {
+        params["type"] = data.type
+    }
+
+    if (data.method) {
+        params["method"] = data.method
+    }
+
     if (data.sort) {
         params["sort"] = data.sort
         params["order"] = data.order == 'asc' ? 'desc' : 'asc'
@@ -46,7 +54,9 @@ const filterForm = (filter) => {
         order: filter?.order,
         filter: filter?.filter,
         status: filter?.status,
-        filtred: filter?.filtred
+        filtred: filter?.filtred,
+        type: filter?.type,
+        method: filter?.method
     })
 }
 

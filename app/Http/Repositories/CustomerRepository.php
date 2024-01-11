@@ -35,6 +35,9 @@ class CustomerRepository {
                 ->when($filter->status, function($query) use ($filter) {
                     $query->status($filter->status);
                 })
+                ->when($filter->term, function($query) use ($filter) {
+                    $query->search($filter->term);
+                })
                 ->with('owner')
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)

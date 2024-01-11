@@ -4,11 +4,12 @@
 // this import. This is nice for IDE syntax and refactoring.
 
 use App\Models\Bank;
+use App\Models\Card;
 use App\Models\User;
-use Diglactic\Breadcrumbs\Breadcrumbs;
 
 // This import is also not required, and you could replace `BreadcrumbTrail $trail`
 //  with `$trail`. This is nice for IDE type checking and completion.
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 // Dashboard
@@ -52,9 +53,19 @@ Breadcrumbs::for('customers.cards.index', function (BreadcrumbTrail $trail, User
     $trail->push('Cards', route('customers.cards.index', $customer));
 });
 
+Breadcrumbs::for('customers.cards.show', function (BreadcrumbTrail $trail, User $customer, Card $card) {
+    $trail->parent('customers.cards.index', $customer);
+    $trail->push('Details', route('customers.cards.show', [$customer, $card]));
+});
+
+Breadcrumbs::for('customers.cards.transactions', function (BreadcrumbTrail $trail, User $customer, Card $card) {
+    $trail->parent('customers.cards.show', $customer, $card);
+    $trail->push('Transactions', route('customers.cards.transactions', [$customer, $card]));
+});
+
 Breadcrumbs::for('customers.card-requests.index', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.show', $customer);
-    $trail->push('Card Requests', route('customers.cards.index', $customer));
+    $trail->push('Requests', route('customers.cards.index', $customer));
 });
 
 Breadcrumbs::for('customers.topup-requests.index', function (BreadcrumbTrail $trail, User $customer) {

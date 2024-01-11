@@ -69,16 +69,17 @@ class AppService {
     }
 
     public static function dateFormatter(Carbon $date = null, bool $expirable = false) {
-        $output = [
-            "db" => $date?->format("Y-m-d"),
-            "db_full" => $date?->format("Y-m-d H:i:s"),
+        return [
             "original"  => $date,
             "formatted" => $date?->format("d/m/Y"),
             "with_time" => $date?->format("d/m/Y H:i"),
             "dif_for_humans" => $date?->diffForHumans(),
+            "month" => $date?->format("m/y"),
+            "db" => [
+                "short" => $date?->format("Y-m-d"),
+                "full" => $date?->format("Y-m-d H:i:s"),
+            ]
         ];
-
-        return $output;
     }
 
 }

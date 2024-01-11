@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Services\AppService;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TransactionResource extends JsonResource
@@ -19,6 +20,7 @@ class TransactionResource extends JsonResource
         return [
             'id' => $this->id,
             'card' => new CardResource($this->whenLoaded('card')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'type' => $this->type,
             'method' => $this->method,
             'merchant' => $this->merchant,
