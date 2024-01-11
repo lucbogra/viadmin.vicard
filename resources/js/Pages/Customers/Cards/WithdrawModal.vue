@@ -12,11 +12,43 @@
 
                 <div class="space-y-4">
                     <div class="space-y-4 rounded border p-6">
-                        <FieldGroup :inline="false" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
+
+                        <FieldGroup :inline="true" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
                             <el-input :placeholder="slotProps.placeholder" v-model="form.amount" class="w-full" size="large">
                                 <template #prepend>USD</template>
                             </el-input>
                         </FieldGroup>
+                        
+                        <FieldGroup :inline="true" id="merchant" :placeholder="$t('Merchant')" :input-error="form.errors.merchant" v-slot="slotProps">
+                            <el-select
+                                v-model="form.merchant"
+                                class="m-2"
+                                placeholder="Select merchant"
+                                size="large"
+                            >
+                                <el-option v-for="merchant in merchants" :key="merchant.id" :value="merchant.id" :label="merchant.name">
+                                    <div class="flex items-center justify-between">
+                                        <span>{{ merchant.name }}</span>
+                                        <div class="w-5 h-5">
+                                            <Icon :icon="merchant.icon" style="color: #fffc3d;" class="w-5 h-5" />
+                                        </div>
+                                    </div>
+
+                                </el-option>
+                            </el-select>
+                        </FieldGroup>
+
+                        <FieldGroup :inline="true" id="date" :placeholder="$t('Date')" :input-error="form.errors.date" v-slot="slotProps">
+                            <el-date-picker
+                                v-model="form.date"
+                                type="date"
+                                placeholder="Pick a day"
+                                size="large"
+                                format="YYYY-MM-DD"
+                                value-format="YYYY-MM-DD"
+                            />
+                        </FieldGroup>
+
                     </div>
 
                     <div class="space-x-1">
@@ -71,12 +103,15 @@
             default: false
         },
         customer: Object,
+        merchants: Array,
         card: Object,
     })
 
     const form = useForm({
         _method: "POST",
         amount: 0,
+        date: null,
+        merchant: null,
         confirm: 'no',
     });
 
@@ -84,6 +119,7 @@
 
     const modalOnClose = () => {
         processing.value = false
+        
         form.reset()
         emit('onModalClose')
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('card_id')->index();
             $table->enum('type', Transaction::TYPE);
-            $table->enum('method', Transaction::METHOD);
+            $table->enum('method', Transaction::METHOD)->nullable();
             $table->date('date');
             $table->string('merchant')->nullable();
             $table->decimal('amount', 64, 0);

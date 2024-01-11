@@ -15,15 +15,15 @@ class TransactionObserver
 
         if ($transaction->type == 'deposit') {
 
-            $newAmount = $transaction->card->card_balance->getMinorAmount()->toInt() + $amount;
+            $newAmount = $transaction->card->card_balance->plus($amount);
             
         } else {
             
-            $newAmount = $transaction->card->card_balance->getMinorAmount()->toInt() - $amount;
+            $newAmount = $transaction->card->card_balance->minus($amount);
 
         }
 
-        $transaction->card()->update(['card_balance' => $newAmount]);
+        $transaction->card()->update(['card_balance' => $newAmount->getMinorAmount()->toInt()]);
     }
 
 }

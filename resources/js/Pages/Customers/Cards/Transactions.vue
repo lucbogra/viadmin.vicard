@@ -28,6 +28,7 @@ const props = defineProps({
     customer: Object,
     transactions: Object,
     filter: Object,
+    merchants: Array,
     breadcrumbs: Array,
 });
 
@@ -50,7 +51,14 @@ watch(filterForm, debounce(term => {
 
             
             <div class=" bg-white mx-10 py-10">
-                <h5 class="mb-5 text-xl font-bold px-10">Card Transactions</h5>
+                <div class="flex justify-between px-10">
+                    <h5 class="mb-5 text-xl font-bold">Card Transactions</h5>
+                    <h5 class="mb-5 text-xl font-bold px-3 py-1 rounded space-x-1 bg-gray-800">
+                        <span class="text-gray-300">Balance: </span>
+                        <span class="text-white">{{ card.data.card_balance.currency }}</span>
+                        <span class="text-white">{{ card.data.card_balance.amount }}</span>
+                    </h5>
+                </div>
   
                 <Table
                     :bordered="false"
@@ -116,23 +124,30 @@ watch(filterForm, debounce(term => {
 
                     <template v-slot="{ items } = slotProps">
                         <THeadTr>
+                            <THeadTd :label="$t('Merchant')" />
                             <THeadTd :label="$t('Type')" />
                             <THeadTd :label="$t('Method')" />
-                            <THeadTd :label="$t('Amount')" />
                             <THeadTd :label="$t('Date')" />
                             <THeadTd :label="$t('Perform By')" />
+                            <THeadTd :label="$t('Amount')" position="end" />
                         </THeadTr>
 
                         <TBodyTr v-for="(item, index) of items" :key="index">
+                            <TBodyTd>
+                                <div v-if="item.type == 'withdraw'" class="flex items-center space-x-2">
+                                    <Icon :icon="item.merchant?.icon" style="color: #fffc3d;" class="w-5 h-5" />
+                                    <span class="font-semibold">{{ item.merchant?.name }}</span>
+                                </div>
+                            </TBodyTd>
                             <TBodyTd :label="item.type" class="uppercase" />
                             <TBodyTd :label="item.method" class="uppercase" />
-                            <TBodyTd class="uppercase" bold>
-                                <span :class="item.type == 'deposit' ? 'text-green-600' : 'text-red-600'">
-                                    {{ item.type == 'deposit' ? '+' : '-' }}{{ item.amount.amount }}
-                                </span>
-                            </TBodyTd>
                             <TBodyTd :label="item?.date?.formatted" />
                             <TBodyTd :label="item.user?.name" class="uppercase" />
+                            <TBodyTd class="uppercase" bold position="end">
+                                <div class="text-end" :class="item.type == 'deposit' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'">
+                                    {{ item.type == 'deposit' ? '+' : '-' }}{{ item.amount.amount }}
+                                </div>
+                            </TBodyTd>
 
                         </TBodyTr>
                     </template>
@@ -140,7 +155,7 @@ watch(filterForm, debounce(term => {
             </div>
         </div>
 
-        <WithdrawModal :showModal="showModal" :customer="customer.data" :card="card.data" @on-modal-close="showModal = false" />
+        <WithdrawModal :showModal="showModal" :merchants="merchants" :customer="customer.data" :card="card.data" @on-modal-close="showModal = false" />
      
     </AppLayout>
 </template>

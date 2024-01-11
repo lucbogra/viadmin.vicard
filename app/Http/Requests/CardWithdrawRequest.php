@@ -24,6 +24,8 @@ class CardWithdrawRequest extends FormRequest
 
         return [
             'confirm' => ['in:yes'],
+            'date' => ['required', 'date_format:Y-m-d'],
+            'merchant' => ['required', 'exists:merchants,id'],
             'amount' => ['required', 'numeric', 'min:1']
         ];
 

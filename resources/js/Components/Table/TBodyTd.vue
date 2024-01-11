@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from "vue";
 
-defineProps({
+const props = defineProps({
     label: String,
     position: {
         type: String,
@@ -10,10 +10,18 @@ defineProps({
     bold: Boolean
 });
 
+const positionClass = computed(() => {
+    return {
+        "start": "justify-start",
+        "center": "justify-center",
+        "end": "justify-end",
+    }[props.position];
+});
+
 </script>
 
 <template>
-    <td class="py-2 px-4 text-gray-600 tracking-normal text-sm" :class="{'font-bold': bold, 'font-light': !bold}">
+    <td class="py-2 px-4 text-gray-600 tracking-normal text-sm" :class="[{'font-bold': bold, 'font-light': !bold}, positionClass]">
         <span v-if="label">{{ label }}</span>
         <slot v-else />
     </td>

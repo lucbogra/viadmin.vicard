@@ -43,6 +43,33 @@ export default {
                 // Simple 16 column grid
                 '4': 'repeat(4, minmax(0, 1fr))',
 
+            },
+            gridColumn: {
+                'span-2': 'span 2 / span 3',
+                'span-3': 'span 3 / span 3',
+                'span-4': 'span 4 / span 3',
+                'span-5': 'span 5 / span 3',
+                'span-6': 'span 6 / span 3',
+            },
+            spacing: {
+                '36': '9rem',
+                '40': '10rem',
+                '44': '11rem',
+                '48': '12rem',
+                '52': '13rem',
+                '56': '14rem',
+                '60': '15rem',
+                '64': '16rem',
+                '68': '17rem',
+                '72': '18rem',
+                '76': '19rem',
+                '80': '20rem',
+                '84': '21rem',
+                '88': '22rem',
+                '92': '23rem',
+                '96': '24rem',
+                '100': '25rem',
+                '128': '32rem',
             }
         },
     },

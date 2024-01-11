@@ -22,6 +22,7 @@ use App\Http\Requests\CardWithdrawRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Repositories\CustomerRepository;
 use App\Http\Requests\CardTopupRequestRequest;
+use App\Models\Merchant;
 
 class CustomerController extends Controller
 {
@@ -154,6 +155,8 @@ class CustomerController extends Controller
         $customer = new CustomerResource($customer);
         
         $card = new CardResource($card);
+
+        $merchants = Merchant::query()->get(['id', 'name', 'icon']);
         
         $transactions = TransactionResource::collection(
             $card->transactions()
@@ -166,13 +169,13 @@ class CustomerController extends Controller
                 ->when($filter->term, function($query) use ($filter) {
                     $query->search($filter->term);
                 })
-                ->with('user')
+                ->with(['user', 'merchant'])
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
                 ->withQueryString()
         );
 
-        return Inertia::render("Customers/Cards/Transactions", compact("customer", "card", "transactions", "breadcrumbs", "filter"));
+        return Inertia::render("Customers/Cards/Transactions", compact("customer", "card", "merchants", "transactions", "breadcrumbs", "filter"));
 
     }
 
@@ -184,9 +187,10 @@ class CustomerController extends Controller
         $transaction = $card->transactions()->create([
             'user_id' => auth()->id(),
             'type' => 'withdraw',
-            'method' => 'bank transfer',
+            'method' => null,
             'confirmed' => true,
-            'date' => today(),
+            'merchant_id' => $cardWithdrawRequest->merchant,
+            'date' => $cardWithdrawRequest->date,
             'amount' => $cardWithdrawRequest->amount,
             'currency' => 'USD',
         ]);
@@ -275,7 +279,7 @@ class CustomerController extends Controller
                 'type' => 'deposit',
                 'method' => 'bank transfer',
                 'confirmed' => true,
-                'date' => today(),
+                'date' => $cardTopupRequestRequest->date,
                 'amount' => $cardTopupRequestRequest->amount,
                 'currency' => 'USD',
             ]);

@@ -21,6 +21,7 @@ class TransactionResource extends JsonResource
             'id' => $this->id,
             'card' => new CardResource($this->whenLoaded('card')),
             'user' => new UserResource($this->whenLoaded('user')),
+            'merchant' => $this->whenLoaded('merchant'),
             'type' => $this->type,
             'method' => $this->method,
             'merchant' => $this->merchant,

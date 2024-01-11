@@ -40,6 +40,18 @@
                                 <template #prepend>USD</template>
                             </el-input>
                         </FieldGroup>
+                        <FieldGroup :inline="false" id="date" :placeholder="$t('Date')" :input-error="form.errors.date" v-slot="slotProps">
+                            <div>
+                                <el-date-picker
+                                    v-model="form.date"
+                                    type="date"
+                                    placeholder="Pick a day"
+                                    size="large"
+                                    format="YYYY-MM-DD"
+                                    value-format="YYYY-MM-DD"
+                                />
+                            </div>
+                        </FieldGroup>
                     </div>
 
                     <div class="space-x-1">
@@ -102,6 +114,7 @@
         _method: "POST",
         status: 'pending',
         
+        date: null,
         amount: 0,
 
         confirm: 'no',

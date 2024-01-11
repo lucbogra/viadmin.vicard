@@ -21,7 +21,6 @@ class CardTopupRequestRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $rule = [
             'status' => ['required', 'in:pending,validated,cancelled'],
             'confirm' => ['in:yes']
@@ -29,6 +28,7 @@ class CardTopupRequestRequest extends FormRequest
 
         if ($this->status == 'validated') {
             $rule = [...$rule, ...[
+                    'date' => ['required', 'date_format:Y-m-d'],
                     'amount' => ['required', 'numeric', 'min:1']
                 ]
             ];

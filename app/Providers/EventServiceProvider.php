@@ -19,10 +19,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
-        Transaction::class => [
-            TransactionObserver::class
-        ],
+        ]
     ];
 
     /**
@@ -30,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Transaction::observe(TransactionObserver::class);
     }
 
     /**
@@ -40,4 +37,10 @@ class EventServiceProvider extends ServiceProvider
     {
         return false;
     }
+
+    // protected $observers = [
+    //     Transaction::class => [
+    //         TransactionObserver::class
+    //     ],
+    // ];
 }

@@ -24,8 +24,8 @@ const props = defineProps({
                         <Breadcrumb :section-left="false" :breadcrumbs="breadcrumbs" />
                     </div>
                     <div class="sm:flex space-x-4 items-center">
-                        <BankCard2 class="flex-1" v-if="card" :card="card" :link="false" small />
-                        <div class="flex space-x-4">
+                        <BankCard2 class="w-92" v-if="card" :card="card" :link="false" small />
+                        <div class="flex-1 flex space-x-4">
                             <Avatar :image="customer.avatar" size="24" icon="bx:user" />    
 
                             <div class="flex flex-1 space-x-2 sm:space-x-3 justify-between items-center">
