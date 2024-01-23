@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Http\Resources\NotificationResource;
 
 class AppService {
 
@@ -80,6 +81,17 @@ class AppService {
                 "full" => $date?->format("Y-m-d H:i:s"),
             ]
         ];
+    }
+
+    public static function notifications(bool $unReads = false) {
+
+        if ($unReads) {
+            
+            return NotificationResource::collection(auth()->user()->unreadNotifications);
+            
+        }
+
+        return NotificationResource::collection(auth()->user()->notifications);
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Inertia\Middleware;
 use App\Services\AppMenu;
+use App\Services\AppService;
 use Illuminate\Http\Request;
 
 class HandleInertiaRequests extends Middleware
@@ -37,17 +38,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        
         return array_merge(parent::share($request), [
-            'menus' => fn () => $request->user() ?
-                [
-                    "navbarLinks" => (new AppMenu)->render(),
-                ] : null,
+            'menus' => fn () => $user ? ["navbarLinks" => (new AppMenu)->render()] : null,
                 
             'flash' => [
                 'success' => session('success'),
                 'warning' => session('warning'),
                 'error'   => session('error'),
             ],
+            'notifications' => $user ? (new AppService)->notifications() : null,
+            'un_reads_notifications' => $user ? (new AppService)->notifications(unReads: true) : null,
         ]);
     }
 }

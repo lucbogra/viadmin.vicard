@@ -28,38 +28,45 @@
                     </div>
 
                     <div class="flex items-center space-x-2">
-                        <button type="button" class="flex items-center rtl:ml-2 justify-center w-10 h-10 border text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                            <span class="sr-only">View notifications</span>
-                            <Icon icon="ph:bell" class="h-6 w-6" />
-                        </button>
+                        
                     
-                        <!-- <div class="rtl:ml-2">
-                            <Dropdown width="48">
+                        <div class="rtl:ml-2">
+                            <Dropdown width="64">
                                 <template #trigger>
-                                    <button type="button" class="flex items-center justify-center w-10 h-10 border text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                        <div class="w-5 h-5"><img :src="'/assets/flags/' + $page.props.app.locale.current.flag + '.png'"></div>
+                                    <button type="button" class="relative w-10 h-10 border text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
+                                        <div class="flex items-center rtl:ml-2 justify-center ">
+                                            <span class="sr-only">View notifications</span>
+                                            <Icon icon="ph:bell" class="h-6 w-6" />
+                                        </div>
+                                        <div v-if="$page.props.un_reads_notifications.data.length" class="absolute -top-1 -right-1 w-4 h-4 bg-red-400 rounded-full text-white" style="font-size: .6em;">
+                                            {{ $page.props.un_reads_notifications.data.length }}
+                                        </div>
                                     </button>
+                       
                                 </template>
         
                                 <template #content>
                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ $t("Choose Language") }}
+                                        {{ $t("Notifications") }}
                                     </div>
         
-                                    <template v-for="(lang, index) of $page.props.app.langs" :key="index">
-                                        <div class="border-t border-gray-200" />
-                                        <form @submit.prevent="setLang(index)">
-                                            <DropdownLink as="button">
-                                                <div class="flex justify-between items-center">
-                                                <span>{{ lang.label }}</span>
-                                                <div class="w-6 h-6"><img :src="`/assets/flags/${lang.flag}.png`" :alt="lang.label"></div>
-                                                </div>
-                                            </DropdownLink>
-                                        </form>
+                                    <template v-for="(notification, index) of notifications" :key="index">
+                                        
+                                        <Link :href="notification.link" class="border-b border-gray-200 px-4 py-2 text-xs flex space-x-2">
+                                           <div class="h-8 w-8 flex justify-center items-center rounded">
+                                                <Icon :icon="notification.icon" class="h-8 w-8 text-gray-400" />
+                                           </div>
+                                           <div>
+                                                <div class="text-gray-400">{{ notification.type }}</div>
+                                                <div class="text-gray-600">{{ notification.message }}</div>
+                                                <p style="font-size: .8em;">{{ notification.created_at?.dif_for_humans }}</p>
+                                           </div>
+                                        </Link>
+                                        
                                     </template>
                                 </template>
                             </Dropdown>
-                        </div> -->
+                        </div>
     
                         <div>
                             <Dropdown width="48">
@@ -107,6 +114,7 @@
                 </div>
                 
                 <div class="w-full">
+                    <!-- <pre>{{ $page.props.un_reads_notifications.data }}</pre> -->
                     <FlashMessage />
                     <slot />
                 </div>
@@ -141,8 +149,8 @@
   
   
   <script setup>
-  import { ref } from 'vue';
-  import { Link, router, Head } from '@inertiajs/vue3';
+  import { computed, ref } from 'vue';
+  import { Link, router, Head, usePage } from '@inertiajs/vue3';
   import Navbar from './Aside/Navbar.vue';
   import Dropdown from '@/Components/Dropdown.vue';
   import DropdownLink from '@/Components/DropdownLink.vue';
@@ -161,9 +169,25 @@
       }
   });
   
-  const sidebarOpen = ref(false)
-  const showConfirmModal = ref(false)
-  const loggingOut = ref(false)
+    const sidebarOpen = ref(false)
+    const showConfirmModal = ref(false)
+    const loggingOut = ref(false)
+
+    const notifications = computed(() => {
+        const notLists = usePage().props.notifications.data
+        const limit = 10
+
+        let nots = []
+
+        for (let index = 1; index < notLists.length; index++) {
+           
+            nots.push(notLists[index])
+
+            // if (index >= limit) break;
+        }
+
+        return notLists
+    })
   
   const logout = () => {
       loggingOut.value = true

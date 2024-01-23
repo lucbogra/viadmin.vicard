@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Merchant;
 use App\Models\CardRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ use App\Http\Requests\CardWithdrawRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Repositories\CustomerRepository;
 use App\Http\Requests\CardTopupRequestRequest;
-use App\Models\Merchant;
+use App\Notifications\CardRequestProcessNotification;
 
 class CustomerController extends Controller
 {
@@ -203,6 +204,7 @@ class CustomerController extends Controller
      */
     public function cardRequests(User $customer)
     {
+        
         $breadcrumbs = Breadcrumbs::generate("customers.card-requests.index", $customer);
         
         $filter = new FilterObject;
@@ -219,6 +221,8 @@ class CustomerController extends Controller
      */
     public function cardRequestValidation(User $customer, CardRequest $cardRequest, CardRequestRequest $cardRequestRequest)
     {
+        $card = new Card;
+
         if ($cardRequestRequest->status == 'validated') {
 
             $card = Card::create([
@@ -244,6 +248,9 @@ class CustomerController extends Controller
 
         $cardRequest->status = $cardRequestRequest->status;
         $cardRequest->save();
+
+        $customer->notify(new CardRequestProcessNotification($cardRequest, $card));
+        // Notification::send(AppService::admins(), new CardRequestNotification($cardRequest));
 
         $message = $cardRequestRequest->status == 'validated' ? __('The card has been created successfully') : __('The card has been rejected successfully');
 

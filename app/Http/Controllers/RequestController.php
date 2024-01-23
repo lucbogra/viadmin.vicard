@@ -14,9 +14,11 @@ use App\Models\CardTopUpRequest;
 class RequestController extends Controller
 {
     public function cardRequests()
-    {
+    {       
         $breadcrumbs = Breadcrumbs::generate("card-requests.index");
         
+        auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CardRequestNotification')->update(['read_at' => now()]);
+
         $filter = new FilterObject;
 
         $cardRequests = CardRequestResource::collection(
