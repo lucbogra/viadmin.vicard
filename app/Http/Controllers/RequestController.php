@@ -40,6 +40,8 @@ class RequestController extends Controller
     public function topupRequests ()
     {
         $breadcrumbs = Breadcrumbs::generate("topup-requests.index");
+
+        auth()->user()->unreadNotifications()->where('type', 'App\Notifications\CardTopupRequestNotification')->update(['read_at' => now()]);
         
         $filter = new FilterObject;
 

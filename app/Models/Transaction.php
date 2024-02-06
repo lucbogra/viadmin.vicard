@@ -24,6 +24,7 @@ class Transaction extends Model
     const METHOD = ['commission', 'bank transfer'];
 
     protected $casts = [
+        "receips" => "array",
         "amount" => Money::class,
         "date" => 'date:Y-m-d',
     ];

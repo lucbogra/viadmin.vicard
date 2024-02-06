@@ -29,6 +29,7 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    label: String,
     icon: String,
     action: String,
     buttonIcon: String
@@ -118,12 +119,12 @@ const staticTitle = computed(() => {
     }
 });
 
-const sharedClass = ref('inline-flex items-center h-8 w-8 items-center transition-all duration-500 justify-center border rounded-full font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 disabled:opacity-25')
+const sharedClass = ref('inline-flex items-center h-8 items-center transition-all duration-500 justify-center border rounded-full font-semibold text-xs uppercase tracking-widest transition ease-in-out duration-150 disabled:opacity-25')
 
 </script>
 
 <template>
-    <Link :title="staticTitle ?? title" v-if="type == 'link'" :disabled="processing" :class="[sharedClass, color ?? themeClass, { 'opacity-25 cursor-not-allowed': processing } ]" :href="href">
+    <Link :title="staticTitle ?? title" v-if="type == 'link'" :disabled="processing" :class="[sharedClass, color ?? themeClass, { 'opacity-25 cursor-not-allowed': processing, 'px-2': label, 'w-8': !label } ]" :href="href">
         <Loader v-if="processing" />
 
         <div v-else class="h-full w-full flex justify-center items-center">
@@ -134,7 +135,7 @@ const sharedClass = ref('inline-flex items-center h-8 w-8 items-center transitio
 
     <a :title="staticTitle ?? title" v-else-if="type == 'a'"
         :disabled="processing"
-        :class="[sharedClass, color ?? themeClass, { 'opacity-25 cursor-not-allowed': processing } ]"
+        :class="[sharedClass, color ?? themeClass, { 'opacity-25 cursor-not-allowed': processing, 'px-2': label, 'w-8': !label } ]"
         :href="href"
         :target="blank ? '_blank' : ''"
     >
@@ -146,13 +147,14 @@ const sharedClass = ref('inline-flex items-center h-8 w-8 items-center transitio
         </div>
     </a>
 
-    <button :title="staticTitle ?? title" v-else :type="type" :disabled="processing" :class="[sharedClass, color ?? themeClass, { 'opacity-25': processing } ]">
+    <button :title="staticTitle ?? title" v-else :type="type" :disabled="processing" :class="[sharedClass, color ?? themeClass, { 'opacity-25': processing, 'px-2': label, 'w-8': !label } ]">
 
         <Loader v-if="processing" />
 
          <div v-else class="h-full w-full flex justify-center items-center">
             <Icon v-if="icon" :icon="icon" class="w-[60%] h-[60%]" />
             <slot v-else />
+            <span v-if="label" class="text-xs">{{ label }}</span>
         </div>
 
     </button>

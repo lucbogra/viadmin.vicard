@@ -5,6 +5,7 @@ import ProfileHeader from '../ProfileHeader.vue';
 import WithdrawModal from './WithdrawModal.vue';
 import ActionLinkButton from '@/Components/ActionLinkButton.vue';
 import CustomersIcon from '@/Components/Icons/customers.svg';
+import ReceipJoinedModal from './ReceipJoinedModal.vue';
 import EmptyIcon from '@/Components/Icons/empty.svg';
 import TransactionsIcon from '@/Components/Icons/card-transactions.svg';
 import debounce from 'lodash/debounce';
@@ -33,7 +34,8 @@ const props = defineProps({
 });
 
 const showModal = ref(false)
-const selectedItem = ref(null)
+const showJoinReceiptModal = ref(false)
+const selectedLine = ref(null)
 
 const filterForm = buildFilterForm(props.filter);
 
@@ -130,6 +132,7 @@ watch(filterForm, debounce(term => {
                             <THeadTd :label="$t('Date')" />
                             <THeadTd :label="$t('Perform By')" />
                             <THeadTd :label="$t('Amount')" position="end" />
+                            <THeadTd :label="$t('')" position="end" />
                         </THeadTr>
 
                         <TBodyTr v-for="(item, index) of items" :key="index">
@@ -148,6 +151,9 @@ watch(filterForm, debounce(term => {
                                     {{ item.type == 'deposit' ? '+' : '-' }}{{ item.amount.amount }}
                                 </div>
                             </TBodyTd>
+                            <TBodyTd class="uppercase" bold position="end">
+                                <ActionLinkButton v-if="item.type == 'withdraw' && item.receips?.length" title="Receipts" :label="item.receips.length + 'files'" theme="secondary" :button-icon="'ic:baseline-attach-file'" type="button" @click="selectedLine = item, showJoinReceiptModal = true" />
+                            </TBodyTd>
 
                         </TBodyTr>
                     </template>
@@ -156,6 +162,7 @@ watch(filterForm, debounce(term => {
         </div>
 
         <WithdrawModal :showModal="showModal" :merchants="merchants" :customer="customer.data" :card="card.data" @on-modal-close="showModal = false" />
-     
+        <ReceipJoinedModal :showModal="showJoinReceiptModal" @on-modal-close="showJoinReceiptModal = false, selectedLine = null" :card="card.data" :item="selectedLine" />
+
     </AppLayout>
 </template>

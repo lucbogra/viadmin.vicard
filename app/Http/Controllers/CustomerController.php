@@ -24,6 +24,7 @@ use App\Http\Resources\TransactionResource;
 use App\Http\Repositories\CustomerRepository;
 use App\Http\Requests\CardTopupRequestRequest;
 use App\Notifications\CardRequestProcessNotification;
+use App\Notifications\CardTopupRequestProcessNotification;
 
 class CustomerController extends Controller
 {
@@ -250,7 +251,6 @@ class CustomerController extends Controller
         $cardRequest->save();
 
         $customer->notify(new CardRequestProcessNotification($cardRequest, $card));
-        // Notification::send(AppService::admins(), new CardRequestNotification($cardRequest));
 
         $message = $cardRequestRequest->status == 'validated' ? __('The card has been created successfully') : __('The card has been rejected successfully');
 
@@ -299,6 +299,8 @@ class CustomerController extends Controller
 
         $cardRequest->status = $cardTopupRequestRequest->status;
         $cardRequest->save();
+
+        $customer->notify(new CardTopupRequestProcessNotification($cardRequest, $cardRequest->card));
 
         $message = $cardTopupRequestRequest->status == 'validated' ? __('The card has been recharged successfully') : __('The card has been rejected successfully');
 

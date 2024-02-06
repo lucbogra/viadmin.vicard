@@ -2,19 +2,21 @@
 
 namespace App\Notifications;
 
+use App\Models\Card;
 use Illuminate\Bus\Queueable;
+use App\Models\CardTopUpRequest;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class CardTopupRequestNotification extends Notification
+class CardTopupRequestProcessNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(protected CardTopUpRequest $cardRequest, protected Card $card)
     {
         //
     }
@@ -26,7 +28,7 @@ class CardTopupRequestNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -48,7 +50,10 @@ class CardTopupRequestNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'card_topup_request_id' => $this->cardRequest->id,
+            'card_request_status' => $this->cardRequest->status,
+            'card_id' => $this->card?->id,
+            'message' => 'Card topup request has been ' . $this->cardRequest->status
         ];
     }
 }
