@@ -46,24 +46,33 @@
                                 </template>
         
                                 <template #content>
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ $t("Notifications") }}
+                                            
+                                    <div v-if="!notifications.length" class="text-center text-xs py-5 text-orange-500">
+                                        {{ $t('No notifications') }}
                                     </div>
-        
-                                    <template v-for="(notification, index) of notifications" :key="index">
-                                        
-                                        <Link :href="notification.link" class="border-b border-gray-200 px-4 py-2 text-xs flex space-x-2">
-                                           <div class="h-8 w-8 flex justify-center items-center rounded">
-                                                <Icon :icon="notification.icon" class="h-8 w-8 text-gray-400" />
-                                           </div>
-                                           <div>
-                                                <div class="text-gray-400">{{ notification.type }}</div>
-                                                <div class="text-gray-600">{{ notification.message }}</div>
-                                                <p style="font-size: .8em;">{{ notification.created_at?.dif_for_humans }}</p>
-                                           </div>
-                                        </Link>
-                                        
-                                    </template>
+
+                                    <div v-else>
+
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                            {{ $t("Notifications") }}
+                                        </div>
+
+                                        <template v-for="(notification, index) of notifications" :key="index">
+                                            
+                                            <Link :href="notification.link" class="border-b border-gray-200 px-4 py-2 text-xs flex space-x-2">
+                                               <div class="h-8 w-8 flex justify-center items-center rounded">
+                                                    <Icon :icon="notification.icon" class="h-8 w-8 text-gray-400" />
+                                               </div>
+                                               <div>
+                                                    <div class="text-gray-400">{{ notification.type }}</div>
+                                                    <div class="text-gray-600">{{ notification.message }}</div>
+                                                    <p style="font-size: .8em;">{{ notification.created_at?.dif_for_humans }}</p>
+                                               </div>
+                                            </Link>
+                                            
+                                        </template>
+                                    </div>
+                                    
                                 </template>
                             </Dropdown>
                         </div>
@@ -174,7 +183,7 @@
     const loggingOut = ref(false)
 
     const notifications = computed(() => {
-        const notLists = usePage().props.notifications.data
+        const notLists = usePage().props.un_reads_notifications.data
         const limit = 10
 
         let nots = []
@@ -183,7 +192,6 @@
            
             nots.push(notLists[index])
 
-            // if (index >= limit) break;
         }
 
         return notLists

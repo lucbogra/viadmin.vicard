@@ -62,6 +62,7 @@ class CustomerController extends Controller
         $newCustomer = Arr::except($request->validated(), 'password_copied');
 
         $newCustomer['password'] = bcrypt($request->password);
+        $newCustomer['team'] = uniqid('team_');
 
         $customer = User::create($newCustomer);
 
