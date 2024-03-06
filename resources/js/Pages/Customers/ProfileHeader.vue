@@ -94,6 +94,15 @@ const props = defineProps({
                             {{ customer.notifs.card_topup_requests_count }}
                             </span>
                         </NavLink>
+
+                        <NavLink class="space-x-1" :href="route('customers.invoices.index', {customer: customer})"
+                                :active="route().current('customers.invoices.index')">
+                            <Icon icon="uil:invoice" class="h-4 w-4" />
+                            <span>Invoices</span>
+                            <span style="font-size: .7em;;" class="w-4 h-4 rounded-full bg-orange-400 text-white inline-flex justify-center items-center" v-if="customer?.notifs?.invoices_count">
+                            {{ customer.notifs.invoices_count }}
+                            </span>
+                        </NavLink>
                         
                     </div>
                 </div>
@@ -114,6 +123,12 @@ const props = defineProps({
                                 :active="route().current('customers.cards.show')">
                             <Icon icon="ion:card-outline" class="h-4 w-4" />
                             <span>Card details</span>
+                        </NavLink>
+
+                        <NavLink class="space-x-1" :href="route('customers.cards.members', {customer: customer, card: card})"
+                                :active="route().current('customers.cards.members')">
+                            <Icon icon="ph:users-three-bold" class="h-4 w-4" />
+                            <span>Members</span>
                         </NavLink>
                     </div>
                 </div>

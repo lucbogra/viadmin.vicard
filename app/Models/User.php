@@ -71,6 +71,8 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    const CUSTOMERS_ROLE_ACCOUNT_OWNER = ['Account Owner'];
+
     const CUSTOMERS_ROLE_LISTS = ['Account Owner', 'Member'];
     
     const ADMINS_ROLE_LISTS = ['Admin', 'Account Manager'];
@@ -78,6 +80,12 @@ class User extends Authenticatable
     public function scopeSearch($builder, $term) {
         $builder->where("name", "LIKE", "%$term%")
                 ->orWhere("email", "LIKE", "%$term%");
+    }
+
+    public function scopeAccountOwners($builder) {
+        $builder->whereHas("roles", function($query) {
+            $query->where("roles.name", User::CUSTOMERS_ROLE_ACCOUNT_OWNER);
+        });
     }
 
     public function scopeCustomers($builder) {
@@ -107,6 +115,12 @@ class User extends Authenticatable
     public function cardTopUpRequests(): HasMany {
 
         return $this->hasMany(CardTopUpRequest::class);
+
+    }
+
+    public function invoices(): HasMany {
+
+        return $this->hasMany(Invoice::class, 'customer_id');
 
     }
 

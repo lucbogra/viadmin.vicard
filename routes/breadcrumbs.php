@@ -63,6 +63,11 @@ Breadcrumbs::for('customers.cards.transactions', function (BreadcrumbTrail $trai
     $trail->push('Transactions', route('customers.cards.transactions', [$customer, $card]));
 });
 
+Breadcrumbs::for('customers.cards.members', function (BreadcrumbTrail $trail, User $customer, Card $card) {
+    $trail->parent('customers.cards.show', $customer, $card);
+    $trail->push('Members', route('customers.cards.members', [$customer, $card]));
+});
+
 Breadcrumbs::for('customers.card-requests.index', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.show', $customer);
     $trail->push('Requests', route('customers.cards.index', $customer));
@@ -71,6 +76,11 @@ Breadcrumbs::for('customers.card-requests.index', function (BreadcrumbTrail $tra
 Breadcrumbs::for('customers.topup-requests.index', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.show', $customer);
     $trail->push('Top Up Requests', route('customers.topup-requests.index', $customer));
+});
+
+Breadcrumbs::for('customers.invoices.index', function (BreadcrumbTrail $trail, User $customer) {
+    $trail->parent('customers.show', $customer);
+    $trail->push('Invoices', route('customers.invoices.index', $customer));
 });
 
 Breadcrumbs::for('cards.index', function (BreadcrumbTrail $trail) {

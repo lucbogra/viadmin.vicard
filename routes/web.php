@@ -27,7 +27,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
 
+        
         Route::prefix('cards/{card}')->name('cards.')->group(function() {
+            Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
             Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
             Route::get('/transactions', [CustomerController::class, 'cardTransactions'])->name('transactions');
             Route::post('/withdraw',    [CustomerController::class, 'cardWithdraw'])->name('withdraw');
@@ -38,6 +40,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         
         Route::get('topup-requests', [CustomerController::class, 'cardTopupRequests'])->name('topup-requests.index');
         Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('topup-requests.update');
+        
+        Route::get('invoices', [CustomerController::class, 'invoices'])->name('invoices.index');
+        // Route::put('invoices/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('invoices.update');
 
     });
 

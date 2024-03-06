@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\CardRequest;
 use App\Objects\FilterObject;
 use App\Http\Resources\CardResource;
+use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\CardRequestResource;
 use App\Http\Resources\CardTopUpRequestResource;
@@ -16,7 +17,7 @@ class CustomerRepository {
     public function all(FilterObject $filter) {
         
         return CustomerResource::collection(
-            User::customers()
+            User::accountOwners()
                 ->when($filter->term, function($query) use ($filter) {
                         $query->search($filter->term);
                 })
@@ -69,6 +70,21 @@ class CustomerRepository {
                     $query->status($filter->status);
                 })
                 ->with(['user', 'transaction', 'card' => ['owner']])
+                ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
+                ->paginate($filter->perPage)
+                ->withQueryString()
+        );
+       
+    }
+
+    public function allInvoices(User $customer, FilterObject $filter) {
+        
+        return InvoiceResource::collection(
+            $customer->invoices()
+                ->when($filter->status, function($query) use ($filter) {
+                    $query->status($filter->status);
+                })
+                ->with(['customer'])
                 ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                 ->paginate($filter->perPage)
                 ->withQueryString()

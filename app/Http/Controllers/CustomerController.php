@@ -185,6 +185,33 @@ class CustomerController extends Controller
     /**
      * Handle the incoming request.
      */
+    public function cardMembers(User $customer, Card $card)
+    {
+        $breadcrumbs = Breadcrumbs::generate("customers.cards.members", $customer, $card);
+
+        $filter = new FilterObject;
+
+        $customer = new CustomerResource($customer);
+        
+        $card = new CardResource($card);
+        
+        $members = CustomerResource::collection(
+            $card->members()
+                ->when($filter->term, function($query) use ($filter) {
+                    $query->search($filter->term);
+                })
+                ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
+                ->paginate($filter->perPage)
+                ->withQueryString()
+        );
+
+        return Inertia::render("Customers/Cards/Members", compact("customer", "card", "members", "breadcrumbs", "filter"));
+
+    }
+
+    /**
+     * Handle the incoming request.
+     */
     public function cardWithdraw(User $customer, Card $card, CardWithdrawRequest $cardWithdrawRequest)
     {
         $transaction = $card->transactions()->create([
@@ -306,5 +333,23 @@ class CustomerController extends Controller
         $message = $cardTopupRequestRequest->status == 'validated' ? __('The card has been recharged successfully') : __('The card has been rejected successfully');
 
         return redirect()->back()->with('success', $message);
+    }
+
+    
+    /**
+     * Display a listing of the resource.
+     */
+    public function invoices(User $customer)
+    {
+        
+        $breadcrumbs = Breadcrumbs::generate("customers.invoices.index", $customer);
+        
+        $filter = new FilterObject;
+
+        $invoices = $this->customerRepository->allInvoices($customer, $filter);
+
+        $customer = New CustomerResource($customer);
+
+        return Inertia::render("Customers/Invoices/Index", compact("invoices", "customer", "filter", "breadcrumbs"));
     }
 }
