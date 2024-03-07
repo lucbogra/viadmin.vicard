@@ -27,7 +27,7 @@ return new class extends Migration
             $table->decimal('amount', 64, 0);
             $table->string('currency');
             $table->boolean('paid');
-            $table->string('payment method')->nullable();
+            $table->string('payment_method')->nullable();
             $table->timestamps();
         });
     }
