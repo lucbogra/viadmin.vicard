@@ -23,8 +23,25 @@ class Invoice extends Model
 
     protected $casts = [
         "amount" => Money::class,
-        "billed_cards" => "array"
+        "billed_cards" => "array",
+        "paid_at" => "datetime",
     ];
+
+    public function scopeUnPaids($builder) {
+        $builder->whereNull("paid_at");
+    }
+
+    public function scopeStatus($builder, $status) {
+        if ($status == "unpaid") {
+            $builder->whereNull("paid_at");
+        } else {
+            $builder->whereNotNull("paid_at");
+        }
+    }
+
+    public function scopeSearch($builder, $term) {
+        $builder->where("invoice_number", "like", "%$term%");
+    }
 
     public function customer(): BelongsTo {
         return $this->belongsTo(User::class, "customer_id");

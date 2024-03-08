@@ -26,7 +26,7 @@ const props = defineProps({
                     <tr>
                         <td class="text-sm text-gray-400">Payment Status: </td>
                         <th class="text-right">
-                            <span class="text-xs" 
+                            <span class="text-sm" 
                                     :class="{
                                     'text-green-600': invoice.paid_at?.original,
                                     'text-red-600': !invoice.paid_at?.original,
@@ -37,8 +37,12 @@ const props = defineProps({
                         </th>
                     </tr>
                     <tr v-if="invoice.paid_at?.original">
-                        <td>Payment Method</td>
-                        <th>Blabla</th>
+                        <td class="text-sm text-gray-400">Paid at</td>
+                        <th class="text-right text-sm">{{ invoice.paid_at?.formatted }}</th>
+                    </tr>
+                    <tr v-if="invoice.paid_at?.original">
+                        <td class="text-sm text-gray-400">Payment Method</td>
+                        <th class="text-right text-sm">{{ invoice.payment_method }}</th>
                     </tr>
                 </table>
             </div>

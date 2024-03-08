@@ -9,6 +9,7 @@ use App\Models\User;
 
 // This import is also not required, and you could replace `BreadcrumbTrail $trail`
 //  with `$trail`. This is nice for IDE type checking and completion.
+use App\Models\Invoice;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -63,6 +64,11 @@ Breadcrumbs::for('customers.cards.transactions', function (BreadcrumbTrail $trai
     $trail->push('Transactions', route('customers.cards.transactions', [$customer, $card]));
 });
 
+Breadcrumbs::for('customers.cards.edit', function (BreadcrumbTrail $trail, User $customer, Card $card) {
+    $trail->parent('customers.cards.show', $customer, $card);
+    $trail->push('Edit card', route('customers.cards.edit', [$customer, $card]));
+});
+
 Breadcrumbs::for('customers.cards.members', function (BreadcrumbTrail $trail, User $customer, Card $card) {
     $trail->parent('customers.cards.show', $customer, $card);
     $trail->push('Members', route('customers.cards.members', [$customer, $card]));
@@ -81,6 +87,11 @@ Breadcrumbs::for('customers.topup-requests.index', function (BreadcrumbTrail $tr
 Breadcrumbs::for('customers.invoices.index', function (BreadcrumbTrail $trail, User $customer) {
     $trail->parent('customers.show', $customer);
     $trail->push('Invoices', route('customers.invoices.index', $customer));
+});
+
+Breadcrumbs::for('customers.invoices.show', function (BreadcrumbTrail $trail, User $customer, Invoice $invoice) {
+    $trail->parent('customers.show', $customer);
+    $trail->push('Invoice: ' . $invoice->invoice_number, route('customers.invoices.show', $invoice));
 });
 
 Breadcrumbs::for('cards.index', function (BreadcrumbTrail $trail) {
@@ -102,4 +113,14 @@ Breadcrumbs::for('settings.banks.create', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('settings.banks.edit', function (BreadcrumbTrail $trail, Bank $bank) {
     $trail->parent('settings.banks.index');
     $trail->push('Edit Bank', route('settings.banks.edit', $bank));
+});
+
+Breadcrumbs::for('invoices.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Invoices', route('invoices.index'));
+});
+
+Breadcrumbs::for('invoices.show', function (BreadcrumbTrail $trail, Invoice $invoice) {
+    $trail->parent('invoices.index');
+    $trail->push('Invoice: ' . $invoice->invoice_number, route('invoices.show', $invoice));
 });

@@ -21,6 +21,19 @@ class CardRequestRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->isMethod('PUT')) {
+            return [
+                // 'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
+                // 'card_fees' => ['required', 'numeric', 'min:0'],
+                'card_validity' => ['required', 'date_format:Y-m-d'],
+                'card_limit' => ['required', 'numeric', 'min:0'],
+                'daily_limit' => ['required', 'numeric', 'min:0'],
+                'per_transaction_limit' => ['required', 'numeric', 'min:0'],
+                'card_status' => ['in:activated,not activated,frozen'],
+                'card_type' => ['in:virtual,physical'],
+            ];
+        }
+
         $rule = [
             'status' => ['required', 'in:pending,validated,cancelled'],
             'confirm' => ['in:yes']

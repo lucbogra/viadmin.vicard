@@ -113,6 +113,12 @@ const props = defineProps({
                             <span>Back to customer profile</span>
                         </NavLink>
 
+                        <NavLink class="space-x-1" :href="route('customers.cards.edit', {customer: customer, card: card})"
+                                :active="route().current('customers.cards.edit')">
+                            <Icon icon="mdi:credit-card-edit-outline" class="h-4 w-4" />
+                            <span>Edit Card</span>
+                        </NavLink>
+
                         <NavLink class="space-x-1" :href="route('customers.cards.transactions', {customer: customer, card: card})"
                                 :active="route().current('customers.cards.transactions')">
                             <Icon icon="grommet-icons:transaction" class="h-4 w-4" />

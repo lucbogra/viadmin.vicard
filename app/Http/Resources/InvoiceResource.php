@@ -27,6 +27,7 @@ class InvoiceResource extends JsonResource
             ],
             'invoice_number' => $this->invoice_number,
             'amount' => $this->amount,
+            'payment_method' => $this->payment_method,
             'customer' => new CustomerResource($this->whenLoaded("customer")),
             'paid_at' => (new AppService)->dateFormatter($this->paid_at),
             'created_at' => (new AppService)->dateFormatter($this->created_at),

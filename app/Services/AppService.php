@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use Carbon\Carbon;
+use App\Models\Invoice;
 use Illuminate\Support\Str;
+use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\NotificationResource;
 
 class AppService {
@@ -92,6 +94,12 @@ class AppService {
         }
 
         return NotificationResource::collection(auth()->user()->notifications);
+    }
+
+    public static function unPaidInvoices() {
+
+        return InvoiceResource::collection(Invoice::unPaids()->get());
+
     }
 
 }

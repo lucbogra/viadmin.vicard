@@ -90,17 +90,33 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function cardEdit(User $customer, Card $card)
     {
-        //
+        $breadcrumbs = Breadcrumbs::generate("customers.cards.edit", $customer, $card);
+        
+        $customer = New CustomerResource($customer);
+
+        $card = new CardResource($card);
+
+        return Inertia::render("Customers/Cards/Edit", compact("card", "customer", "breadcrumbs"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function cardUpdate(CardRequestRequest $cardRequestRequest, User $customer, Card $card)
     {
-        //
+        $card->update([
+            // 'card_number' => $cardRequestRequest->card_number,
+            'card_validity' => $cardRequestRequest->card_validity,
+            'card_limit' => $cardRequestRequest->card_limit,
+            'daily_limit' => $cardRequestRequest->daily_limit,
+            'per_transaction_limit' => $cardRequestRequest->per_transaction_limit,
+            'card_status' => $cardRequestRequest->card_status,
+            'card_type' => $cardRequestRequest->card_type,
+        ]);
+
+        return redirect()->back()->with('success', __('Card infos has been recharged successfully'));
     }
 
     /**

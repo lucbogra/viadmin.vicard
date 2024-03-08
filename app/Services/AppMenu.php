@@ -46,6 +46,17 @@ class AppMenu {
                         "subMenu" => [],
                         "badge"   => null
                     ],    
+                    [
+                        "name"    => __("Invoices"),
+                        "url"     => route("invoices.index"),
+                        "icon"    => "uil:invoice",
+                        "current" => false,
+                        "badge"   => [
+                            "type" => "info",
+                            "value" => (new AppService)->unPaidInvoices()->count()
+                        ],
+                        "subMenu" => []
+                    ],
                 ]
             ],
 

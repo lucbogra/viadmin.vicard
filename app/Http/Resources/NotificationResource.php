@@ -60,6 +60,13 @@ class NotificationResource extends JsonResource
             $icon = 'mynaui:credit-card-plus';
             $link = '#';
 
+        } else if ($this->type == 'App\\Notifications\\InvoiceCheckoutProcessNotification') {
+            
+            $type = __('Invoice payment');
+            $message = data_get($this->data, 'message');
+            $icon = 'mdi:invoice-text-check-outline';
+            $link = '#';
+
         }
 
         return [

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -32,6 +33,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
             Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
             Route::get('/transactions', [CustomerController::class, 'cardTransactions'])->name('transactions');
+            Route::get('/edit', [CustomerController::class, 'cardEdit'])->name('edit');
+            Route::put('/update', [CustomerController::class, 'cardUpdate'])->name('update');
             Route::post('/withdraw',    [CustomerController::class, 'cardWithdraw'])->name('withdraw');
         });
 
@@ -42,7 +45,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('topup-requests.update');
         
         Route::get('invoices', [CustomerController::class, 'invoices'])->name('invoices.index');
-        // Route::put('invoices/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('invoices.update');
+        Route::get('invoices/{invoice}', [CustomerController::class, 'invoiceShow'])->name('invoices.show');
 
     });
 
@@ -58,6 +61,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::resource('banks', BankController::class);
 
+    });
+
+    Route::prefix('invoices')->name('invoices.')->group(function () {
+        Route::get('/', [InvoiceController::class, 'index'])->name('index');
+        Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
     });
 
 });

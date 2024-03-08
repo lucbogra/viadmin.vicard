@@ -32,8 +32,16 @@ class BillCards extends Command
 
         $accountOnwers = User::accountOwners()
                                 ->whereHas('cards')
-                                ->with(['cards'])
+                                ->with(['cards' => function($query) {
+                                    $query->status('activated');
+                                }])
                                 ->get();
+
+        $bar = $this->output->createProgressBar(count($accountOnwers));
+ 
+        $bar->start();
+
+        $billedAccountCount = 0;
 
         foreach ($accountOnwers as $key => $owner) {
 
@@ -75,24 +83,27 @@ class BillCards extends Command
 
             }
 
-            // $invoice['billed_cards'] = collect($billedCards);
             $invoice['billed_cards'] = $billedCards;
             $invoice['amount'] = array_sum(array_column($billedCards, 'amount'));
 
             if (!$owner->invoices()->where("period", $period->format($format))->first()) {
 
-                // info($invoice);
                 $newInvoice = $owner->invoices()->create($invoice);
+
+                $billedAccountCount++;
 
                 $owner->notify(new CardBilingNotification(invoice: $newInvoice, period: $period));
 
             }
 
-            // $this->info(collect($invoice));
-            // $this->newLine();
-
-            info("Billing completed");
+            $bar->advance();
 
         }
+
+        $bar->finish();
+
+        $this->newLine();
+        $this->info("Billing completed successfully. " . ($billedAccountCount . "/" . count($accountOnwers)) . " have been billed.");
+
     }
 }
