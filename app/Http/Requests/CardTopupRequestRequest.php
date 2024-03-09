@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CardRefillLimitRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CardTopupRequestRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,13 +29,16 @@ class CardTopupRequestRequest extends FormRequest
         ];
 
         if ($this->status == 'validated') {
+          
             $rule = [...$rule, ...[
                     'date' => ['required', 'date_format:Y-m-d'],
-                    'amount' => ['required', 'numeric', 'min:1']
+                    'amount' => ['required', 'numeric', 'min:1', new CardRefillLimitRule($this->card_request->card)]
                 ]
             ];
+
         }
 
         return $rule;
     }
+
 }

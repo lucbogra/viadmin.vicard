@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CardTransactionLimitRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CardWithdrawRequest extends FormRequest
@@ -21,12 +22,11 @@ class CardWithdrawRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'confirm' => ['in:yes'],
             'date' => ['required', 'date_format:Y-m-d'],
             'merchant' => ['required', 'exists:merchants,id'],
-            'amount' => ['required', 'numeric', 'min:1']
+            'amount' => ['required', 'numeric', 'min:1', new CardTransactionLimitRule($this->card)]
         ];
 
     }
