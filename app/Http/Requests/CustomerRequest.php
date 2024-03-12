@@ -27,7 +27,6 @@ class CustomerRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:4', 'max:100'],
             'type' => ['array'],
-            'password_copied' => ['required', 'in:yes']
         ];
     }
 }

@@ -178,32 +178,12 @@ const submit = () => {
                         </FieldGroup>
 
                         <FieldGroup :inline="false" id="password" :placeholder="$t('Password')" :input-error="form.errors.password" v-slot="slotProps">
-                            <input ref="copyInput" class="hidden" v-model="form.password" />
 
-                            <el-input ref="copyInput2" show-password :placeholder="slotProps.placeholder" v-model="form.password" class="w-full" size="large">
+                            <el-input show-password :placeholder="slotProps.placeholder" v-model="form.password" class="w-full" size="large">
                                 <template #append>
                                     <el-button @click="generatePassword"><Icon icon="prime:refresh" /></el-button>
                                 </template>
                             </el-input>
-
-                            <div v-if="form.password" class="mt-1">
-                                <div class="flex items-center text-xs text-gray-500 space-x-2">
-                                    <span>{{ $t('Copy the password before to submit') }}</span>
-                                    <el-button circle @click="copyPassword" size="small" type="primary">
-                                        <Icon icon="prime:copy" />
-                                    </el-button>
-                                    <span v-if="form.password == passwordCopied" class="text-green-500 text-xs">{{ $t('Password copied') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="mt-1" v-if="form.errors.password_copied && form.password_copied == 'no'">
-                                <el-alert
-                                    title="You most copy the password before to submit"
-                                    type="warning"
-                                    :closable="false"
-                                    show-icon
-                                />
-                            </div>
                         </FieldGroup>
 
                         <div>

@@ -61,7 +61,7 @@ class CustomerController extends Controller
      */
     public function store(CustomerRequest $request)
     {
-        $newCustomer = Arr::except($request->validated(), 'password_copied');
+        $newCustomer = $request->validated();
 
         $newCustomer['password'] = bcrypt($request->password);
         $newCustomer['team'] = uniqid('team_');
