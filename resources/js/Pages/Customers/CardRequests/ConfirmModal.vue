@@ -1,4 +1,4 @@
-<template>   
+<template>
     <DialogModal :show="showModal" maxWidth="lg" @close="modalOnClose">
 
         <template #content>
@@ -7,7 +7,7 @@
 
                 <div class="w-24 h-24 flex justify-center items-center">
                     <img :src="SendRequestIcon" class="h-16 w-16" />
-                </div>              
+                </div>
 
                 <div class="mb-2 flex items-center text-sm">
                     <el-radio-group v-model="form.status">
@@ -161,6 +161,7 @@
         form.put(route('customers.card-requests.update', {customer: props.customer, card_request: props.cardRequest}), {
             preserveState: true,
             onSuccess: () => {
+                console.log(usePage().props?.flash);
                 ElMessage.success(usePage().props?.flash?.success)
 
                 modalOnClose()

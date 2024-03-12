@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 
 class CardRequestRequest extends FormRequest
 {
@@ -21,17 +22,22 @@ class CardRequestRequest extends FormRequest
      */
     public function rules(): array
     {
+
         if ($this->isMethod('PUT')) {
-            return [
-                // 'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
-                // 'card_fees' => ['required', 'numeric', 'min:0'],
-                'card_validity' => ['required', 'date_format:Y-m-d'],
-                'card_limit' => ['required', 'numeric', 'min:0'],
-                'daily_limit' => ['required', 'numeric', 'min:0'],
-                'per_transaction_limit' => ['required', 'numeric', 'min:0'],
-                'card_status' => ['in:activated,not activated,frozen'],
-                'card_type' => ['in:virtual,physical'],
-            ];
+            if(Route::currentRouteName() == "customers.cards.update") {
+
+                return [
+                    // 'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
+                    // 'card_fees' => ['required', 'numeric', 'min:0'],
+                    'card_validity' => ['required', 'date_format:Y-m-d'],
+                    'card_limit' => ['required', 'numeric', 'min:0'],
+                    'daily_limit' => ['required', 'numeric', 'min:0'],
+                    'per_transaction_limit' => ['required', 'numeric', 'min:0'],
+                    'card_status' => ['in:activated,not activated,frozen'],
+                    'card_type' => ['in:virtual,physical'],
+                ];
+
+            }
         }
 
         $rule = [

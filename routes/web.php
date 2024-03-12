@@ -3,11 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
-<<<<<<< Updated upstream
 use App\Http\Controllers\InvoiceController;
-=======
 use App\Http\Controllers\CodInvestor\TopUpController;
->>>>>>> Stashed changes
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;

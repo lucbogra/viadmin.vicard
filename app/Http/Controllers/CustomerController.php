@@ -36,7 +36,7 @@ class CustomerController extends Controller
     public function index()
     {
         $breadcrumbs = Breadcrumbs::generate("customers.index");
-        
+
         $filter = new FilterObject;
 
         $customers = $this->customerRepository->all($filter);
@@ -93,7 +93,7 @@ class CustomerController extends Controller
     public function cardEdit(User $customer, Card $card)
     {
         $breadcrumbs = Breadcrumbs::generate("customers.cards.edit", $customer, $card);
-        
+
         $customer = New CustomerResource($customer);
 
         $card = new CardResource($card);
@@ -133,7 +133,7 @@ class CustomerController extends Controller
     public function cards(User $customer)
     {
         $breadcrumbs = Breadcrumbs::generate("customers.cards.index", $customer);
-        
+
         $filter = new FilterObject;
 
         $cards = $this->customerRepository->allCards($customer, $filter);
@@ -153,7 +153,7 @@ class CustomerController extends Controller
         $filter = new FilterObject;
 
         $customer = new CustomerResource($customer);
-        
+
         $card->load('owner');
 
         $card = new CardResource($card);
@@ -172,11 +172,11 @@ class CustomerController extends Controller
         $filter = new TransactionFilterObject;
 
         $customer = new CustomerResource($customer);
-        
+
         $card = new CardResource($card);
 
         $merchants = Merchant::query()->get(['id', 'name', 'icon']);
-        
+
         $transactions = TransactionResource::collection(
             $card->transactions()
                 ->when($filter->type, function($query) use ($filter) {
@@ -208,9 +208,9 @@ class CustomerController extends Controller
         $filter = new FilterObject;
 
         $customer = new CustomerResource($customer);
-        
+
         $card = new CardResource($card);
-        
+
         $members = CustomerResource::collection(
             $card->members()
                 ->when($filter->term, function($query) use ($filter) {
@@ -249,9 +249,9 @@ class CustomerController extends Controller
      */
     public function cardRequests(User $customer)
     {
-        
+
         $breadcrumbs = Breadcrumbs::generate("customers.card-requests.index", $customer);
-        
+
         $filter = new FilterObject;
 
         $cardRequests = $this->customerRepository->allCardRequests($customer, $filter);
@@ -298,16 +298,16 @@ class CustomerController extends Controller
 
         $message = $cardRequestRequest->status == 'validated' ? __('The card has been created successfully') : __('The card has been rejected successfully');
 
-        return redirect()->back()->with('sucess', $message);
+        return redirect()->back()->with('success', $message);
     }
-    
+
     /**
      * Display a listing of the resource.
      */
     public function cardTopupRequests(User $customer)
     {
         $breadcrumbs = Breadcrumbs::generate("customers.topup-requests.index", $customer);
-        
+
         $filter = new FilterObject;
 
         $cardTopupRequests = $this->customerRepository->allCardTopupRequests($customer, $filter);
@@ -317,7 +317,7 @@ class CustomerController extends Controller
         return Inertia::render("Customers/CardTopupRequests/Index", compact("cardTopupRequests", "customer", "filter", "breadcrumbs"));
     }
 
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -351,15 +351,15 @@ class CustomerController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
-    
+
     /**
      * Display a listing of the resource.
      */
     public function invoices(User $customer)
     {
-        
+
         $breadcrumbs = Breadcrumbs::generate("customers.invoices.index", $customer);
-        
+
         $filter = new FilterObject;
 
         $invoices = $this->customerRepository->allInvoices($customer, $filter);
