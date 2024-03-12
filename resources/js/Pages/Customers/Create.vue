@@ -4,7 +4,7 @@ import LinkButton from '@/Components/LinkButton.vue';
 import FieldGroup from "@/Components/FieldGroup.vue";
 import UserSearchIcon1 from '@/Components/Icons/user-search-1.svg';
 import UserSearchIcon2 from '@/Components/Icons/user-search-2.svg';
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { Icon } from '@iconify/vue';
 import { onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
@@ -48,7 +48,7 @@ onMounted(() => {
 const loadAffiliates = async (queryString) => {
     let lists = []
 
-    let url = 'http://codinvestor.test/api/users/investors/all'
+    let url = 'http://app.codinvestor.test/api/users/investors/all'
 
     if (queryString) {
         url += '?search=' + queryString
@@ -125,17 +125,17 @@ const submit = () => {
 </script>
 
 <template>
-    <AppLayout :title="$t('New Customer')"> 
-            
+    <AppLayout :title="$t('New Customer')">
+
         <div class="">
             <form @submit.prevent="submit" class="bg-white mx-10 px-10 block" :class="form.cod_investor_id ? 'mb-8 pb-8' : ''">
                 <div class="space-y-6">
-                
+
                     <div class="flex flex-col items-center space-y-3 justify-center transition-all duration-300" :class="form.cod_investor_id ? 'py-8' : 'py-32'">
                         <div class="rounded-full border border-gray-400 flex justify-center items-center transition-all duration-300" :class="form.cod_investor_id ? 'h-16 w-16' : 'h-32 w-32'">
 
                             <img :src="UserSearchIcon1" class="transition-all duration-300" :class="form.cod_investor_id ? 'h-8 w-8' : 'h-20 w-20'" />
-                            
+
                         </div>
                         <h4 class="text-center font-semibold text-xl text-gray-500 uppercase mb-5">{{ $t('Search COD affiliate') }}</h4>
                         <el-autocomplete
@@ -178,7 +178,7 @@ const submit = () => {
 
                         <FieldGroup :inline="false" id="password" :placeholder="$t('Password')" :input-error="form.errors.password" v-slot="slotProps">
                             <input ref="copyInput" class="hidden" v-model="form.password" />
-                            
+
                             <el-input ref="copyInput2" show-password :placeholder="slotProps.placeholder" v-model="form.password" class="w-full" size="large">
                                 <template #append>
                                     <el-button @click="generatePassword"><Icon icon="prime:refresh" /></el-button>
@@ -214,12 +214,12 @@ const submit = () => {
                             </LinkButton>
                         </div>
                     </div>
-                    
-                </div>  
 
-            </form> 
+                </div>
+
+            </form>
 
         </div>
-     
+
     </AppLayout>
 </template>

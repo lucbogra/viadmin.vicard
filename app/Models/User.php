@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Role;
@@ -33,7 +34,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'cod_investor_id', 'type'
+        'name', 'email', 'password', 'cod_investor_id', 'type', 'team'
     ];
 
     /**
@@ -74,7 +75,7 @@ class User extends Authenticatable
     const CUSTOMERS_ROLE_ACCOUNT_OWNER = ['Account Owner'];
 
     const CUSTOMERS_ROLE_LISTS = ['Account Owner', 'Member'];
-    
+
     const ADMINS_ROLE_LISTS = ['Admin', 'Account Manager'];
 
     public function scopeSearch($builder, $term) {
@@ -103,7 +104,7 @@ class User extends Authenticatable
     public function owner(): HasMany {
 
         return $this->hasMany(Card::class, 'owner_id');
-        
+
     }
 
     public function cardRequests(): HasMany {

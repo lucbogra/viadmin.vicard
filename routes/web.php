@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\InvoiceController;
+=======
+use App\Http\Controllers\CodInvestor\TopUpController;
+>>>>>>> Stashed changes
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -28,7 +32,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
 
-        
+
         Route::prefix('cards/{card}')->name('cards.')->group(function() {
             Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
             Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
@@ -40,10 +44,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('card-requests', [CustomerController::class, 'cardRequests'])->name('card-requests.index');
         Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
-        
+
         Route::get('topup-requests', [CustomerController::class, 'cardTopupRequests'])->name('topup-requests.index');
         Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('topup-requests.update');
-        
+
         Route::get('invoices', [CustomerController::class, 'invoices'])->name('invoices.index');
         Route::get('invoices/{invoice}', [CustomerController::class, 'invoiceShow'])->name('invoices.show');
 
@@ -52,9 +56,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::resource('/customers', CustomerController::class);
 
     Route::get('card-requests', [RequestController::class, 'cardRequests'])->name('card-requests.index');
-    
+
     Route::get('topup-requests', [RequestController::class, 'topupRequests'])->name('topup-requests.index');
-    
+
     Route::get('cards', [CardController::class, 'index'])->name('cards.index');
 
     Route::prefix('settings')->name('settings.')->group(function() {
@@ -67,5 +71,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::get('/', [InvoiceController::class, 'index'])->name('index');
         Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
     });
+
+
+    Route::get('/vicards-cod-users', [TopUpController::class, 'index']);
 
 });
