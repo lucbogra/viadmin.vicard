@@ -11,6 +11,7 @@ import { ElMessage } from 'element-plus';
 
 const props = defineProps({
     breadcrumbs: Array,
+    baseUrl : String
 });
 
 const form = useForm({
@@ -48,7 +49,7 @@ onMounted(() => {
 const loadAffiliates = async (queryString) => {
     let lists = []
 
-    let url = 'http://app.codinvestor.test/api/users/investors/all'
+    let url = props.baseUrl+'/api/users/investors/all'
 
     if (queryString) {
         url += '?search=' + queryString
