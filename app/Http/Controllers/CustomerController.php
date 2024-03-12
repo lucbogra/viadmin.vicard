@@ -51,7 +51,9 @@ class CustomerController extends Controller
     {
         $breadcrumbs = Breadcrumbs::generate("customers.create");
 
-        return Inertia::render("Customers/Create", compact("breadcrumbs"));
+        $baseUrl = config('vicards.cod_investor_admin_api_link');
+
+        return Inertia::render("Customers/Create", compact("breadcrumbs", "baseUrl"));
     }
 
     /**
