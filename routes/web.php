@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\CodInvestor\TopUpController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,21 +20,56 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'admin'])->group(function () {
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', DashboardController::class);
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::prefix('customers/{customer}')->name('customers.')->group(function() {
+
+        Route::get('cards', [CustomerController::class, 'cards'])->name('cards.index');
+
+
+        Route::prefix('cards/{card}')->name('cards.')->group(function() {
+            Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
+            Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
+            Route::get('/transactions', [CustomerController::class, 'cardTransactions'])->name('transactions');
+            Route::get('/edit', [CustomerController::class, 'cardEdit'])->name('edit');
+            Route::put('/update', [CustomerController::class, 'cardUpdate'])->name('update');
+            Route::post('/withdraw',    [CustomerController::class, 'cardWithdraw'])->name('withdraw');
+        });
+
+        Route::get('card-requests', [CustomerController::class, 'cardRequests'])->name('card-requests.index');
+        Route::put('card-requests/{card_request}', [CustomerController::class, 'cardRequestValidation'])->name('card-requests.update');
+
+        Route::get('topup-requests', [CustomerController::class, 'cardTopupRequests'])->name('topup-requests.index');
+        Route::put('topup-requests/{card_request}', [CustomerController::class, 'cardTopupRequestValidation'])->name('topup-requests.update');
+
+        Route::get('invoices', [CustomerController::class, 'invoices'])->name('invoices.index');
+        Route::get('invoices/{invoice}', [CustomerController::class, 'invoiceShow'])->name('invoices.show');
+
+    });
+
+    Route::resource('/customers', CustomerController::class);
+
+    Route::get('card-requests', [RequestController::class, 'cardRequests'])->name('card-requests.index');
+
+    Route::get('topup-requests', [RequestController::class, 'topupRequests'])->name('topup-requests.index');
+
+    Route::get('cards', [CardController::class, 'index'])->name('cards.index');
+
+    Route::prefix('settings')->name('settings.')->group(function() {
+
+        Route::resource('banks', BankController::class);
+
+    });
+
+    Route::prefix('invoices')->name('invoices.')->group(function () {
+        Route::get('/', [InvoiceController::class, 'index'])->name('index');
+        Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
+    });
+
+
+    Route::get('/vicards-cod-users', [TopUpController::class, 'index']);
+
 });

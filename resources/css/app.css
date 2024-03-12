@@ -5,3 +5,75 @@
 [x-cloak] {
     display: none;
 }
+
+@font-face {
+    font-family: "Quicksand";
+    src: url("../../public/assets/fonts/Quicksand/Quicksand-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("../../public/assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
+}
+
+.el-input__wrapper
+[type='text']:focus,
+[type='email']:focus,
+[type='url']:focus,
+[type='password']:focus,
+[type='number']:focus,
+[type='date']:focus,
+[type='datetime-local']:focus,
+[type='month']:focus,
+[type='search']:focus,
+[type='tel']:focus,
+[type='time']:focus,
+[type='week']:focus,
+[multiple],
+input,
+textarea,
+select {
+    box-shadow: none;
+    border-color: #fff;
+}
+
+/* .el-input {
+    box-shadow: 0 0 3px red;
+} */
+
+/* .el-input__wrapper {
+    box-shadow: 0 0 0 red;
+}
+ */
+.is-drag .el-upload-dragger {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+:root {
+    --el-color-primary: green;
+}
+
+@layer base {
+    #lead-page-preview-items {
+        scroll-behavior: smooth;
+    }
+}
+
+@layer utilities {
+    @variants responsive {
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+    }
+}
