@@ -22,6 +22,7 @@ class CardRequestResource extends JsonResource
                 'key' => $this->status,
                 'label' => $this->getStatus($this->status)
             ],
+            'receips' => $this->receips,
             'created_at' => (new AppService)->dateFormatter($this->created_at),
             'updated_at' => (new AppService)->dateFormatter($this->updated_at),
         ];

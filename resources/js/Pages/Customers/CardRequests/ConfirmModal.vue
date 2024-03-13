@@ -19,6 +19,10 @@
 
                 <div v-if="form.status != 'pending'" class="space-y-4">
                     <div v-if="form.status == 'validated'" class="space-y-4 rounded border p-6">
+                        <FieldGroup :inline="false" id="nickname" :placeholder="$t('Nickname')" :input-error="form.errors.nickname" v-slot="slotProps">
+                            <el-input :placeholder="slotProps.placeholder" v-model="form.nickname" class="w-full" size="large" />
+                        </FieldGroup>
+
                         <FieldGroup :inline="false" id="card_number" :placeholder="$t('Card Number')" :input-error="form.errors.card_number" v-slot="slotProps">
                             <el-input :placeholder="slotProps.placeholder" v-model="form.card_number" class="w-full" size="large" />
                         </FieldGroup>
@@ -135,6 +139,7 @@
         _method: "POST",
         status: 'pending',
 
+        nickname: null,
         card_number: null,
         card_validity: null,
         card_limit: null,

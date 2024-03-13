@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('owner_id')->index();
             $table->foreignUuid('card_request_id')->index();
+            $table->string('nickname')->unique();
             $table->string('card_number');
             $table->date('card_validity');
             $table->decimal('card_limit', 64, 0);

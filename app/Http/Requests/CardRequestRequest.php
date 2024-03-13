@@ -29,6 +29,7 @@ class CardRequestRequest extends FormRequest
                 return [
                     // 'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
                     // 'card_fees' => ['required', 'numeric', 'min:0'],
+                    'nickname' => ['required', 'string', 'max:100', "unique:cards,{$this->card}"],
                     'card_validity' => ['required', 'date_format:Y-m-d'],
                     'card_limit' => ['required', 'numeric', 'min:0'],
                     'daily_limit' => ['required', 'numeric', 'min:0'],
@@ -47,6 +48,7 @@ class CardRequestRequest extends FormRequest
 
         if ($this->status == 'validated') {
             $rule = [...$rule, ...[
+                    'nickname' => ['required', 'string', 'max:100', 'unique:cards'],
                     'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
                     'card_validity' => ['required', 'date_format:Y-m-d'],
                     'card_limit' => ['required', 'numeric', 'min:0'],

@@ -18,6 +18,9 @@ class CardRequest extends Model
     use SoftDeletes;
     use HasPerformer;
 
+    protected $casts = [
+        'receips' => 'array'
+    ];
 
     const STATUS = ['pending', 'cancelled', 'validated'];
 

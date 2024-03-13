@@ -100,6 +100,7 @@ watch(filterForm, debounce(term => {
                         <THeadTr>
                             <THeadTd :label="$t('User')" />
                             <THeadTd :label="$t('Status')" />
+                            <THeadTd :label="$t('Receips')" />
                             <THeadTd :label="$t('Date')" />
                             <THeadTd :label="$t('actions')" position="end"
                             />
@@ -117,6 +118,12 @@ watch(filterForm, debounce(term => {
                                         'border-orange-400 bg-orange-100 text-orange-600': req.status.key == 'pending',
                                     }">
                                     {{ req.status.label }}
+                                </span>
+                            </TBodyTd>
+                            <TBodyTd>
+                                <span v-if="req.receips?.length" class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedRequest = req, showModal = true, mode = 'show'">
+                                    <Icon icon="ic:baseline-attach-file" class="w-4 h-4" />
+                                    <span>{{ req.receips.length }} files</span>
                                 </span>
                             </TBodyTd>
                             <TBodyTd :label="req?.created_at?.formatted" />
