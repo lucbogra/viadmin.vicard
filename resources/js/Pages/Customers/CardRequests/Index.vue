@@ -122,7 +122,7 @@ watch(filterForm, debounce(term => {
                                 </span>
                             </TBodyTd>
                             <TBodyTd>
-                                <span v-if="req.receips?.length" class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedRequest = req, showModal = true, mode = 'show'">
+                                <span v-if="req.receips?.length" class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedItem = req, modal = 'details', showModal = true">
                                     <Icon icon="ic:baseline-attach-file" class="w-4 h-4" />
                                     <span>{{ req.receips.length }} files</span>
                                 </span>
