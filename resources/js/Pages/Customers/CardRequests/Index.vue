@@ -22,6 +22,7 @@ import {
     buildFilterForm,
     tableLoading
 } from "@/Components/Table";
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     cardRequests: Object,
@@ -110,7 +111,10 @@ watch(filterForm, debounce(term => {
                         </THeadTr>
 
                         <TBodyTr v-for="(req, index) of items" :key="index">
-                            <TBodyTd :label="req.user.name" />
+                            <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.show', req.user)">
+                                <Icon icon="ph:user-bold" class="w-4 h-4" />
+                                <span>{{ req.user.name }}</span>
+                            </Link>
                             <TBodyTd>
                                 <span class="py-1 px-2 border rounded text-xs" 
                                         :class="{

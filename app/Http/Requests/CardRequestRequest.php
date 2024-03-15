@@ -29,7 +29,7 @@ class CardRequestRequest extends FormRequest
                 return [
                     // 'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
                     // 'card_fees' => ['required', 'numeric', 'min:0'],
-                    'nickname' => ['required', 'string', 'max:100', "unique:cards,{$this->card}"],
+                    'nickname' => ['required', 'string', 'max:100', "unique:cards,id,{$this->card->id}"],
                     'card_validity' => ['required', 'date_format:Y-m-d'],
                     'card_limit' => ['required', 'numeric', 'min:0'],
                     'daily_limit' => ['required', 'numeric', 'min:0'],

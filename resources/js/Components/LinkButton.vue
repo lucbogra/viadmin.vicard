@@ -45,7 +45,7 @@ const themes = {
     },
     'success': {
         'solid': 'border border-transparent bg-green-800 hover:bg-green-700 focus:bg-green-700 active:bg-green-900 text-white',
-        'outline': ''
+        'outline': 'bg-white border hover:bg-green-700 hover:text-white border-green-700  text-green-900 bg-green-50 focus:bg-green-100 active:bg-green-100',
     },
 }
 
@@ -71,16 +71,19 @@ const padding = computed(() => {
     <Link v-if="type == 'link'" :disabled="processing" :class="[sharedClass, themeClass, { 'opacity-25 cursor-not-allowed': processing } ]" :href="href">
         <slot />
         <span v-if="processing" class="ml-1">...</span>
+        <slot v-else name="icon" />
     </Link>
 
     <a v-else-if="type == 'a'" :disabled="processing" :class="[sharedClass, themeClass, { 'opacity-25 cursor-not-allowed': processing } ]" :href="href">
         <slot />
         <span v-if="processing" class="ml-1">...</span>
+        <slot v-else name="icon" />
     </a>
 
     <button v-else :type="type" :disabled="processing" :class="[sharedClass, themeClass, { 'opacity-25': processing } ]">
 
         <Loader v-if="processing" />
+        <slot v-else name="icon" />
         <slot />
 
     </button>

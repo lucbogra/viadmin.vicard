@@ -101,7 +101,7 @@ watch(filterForm, debounce(term => {
                     <template v-slot="{ items } = slotProps">
                         <THeadTr>
                             <THeadTd :label="$t('Month')" />
-                            <THeadTd :label="$t('Cards')" />
+                            <THeadTd :label="$t('Card')" />
                             <THeadTd :label="$t('Total Amount')" />
                             <THeadTd :label="$t('Status')" />
                             <THeadTd :label="$t('Billed at')" />
@@ -118,10 +118,10 @@ watch(filterForm, debounce(term => {
                             </TBodyTd>
 
                             <TBodyTd>
-                                <div v-if="invoice?.billed_cards?.length" class="flex items-center space-x-1">
+                                <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.cards.cardShow', {customer: invoice.customer, card: invoice.card})">
                                     <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
-                                    <span>{{ invoice?.billed_cards?.length }}</span>
-                                </div>
+                                    <span>{{ invoice.card?.card_number }}</span>
+                                </Link>
                             </TBodyTd>
 
                             <TBodyTd>

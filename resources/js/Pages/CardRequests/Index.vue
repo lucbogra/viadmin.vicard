@@ -109,7 +109,7 @@ watch(filterForm, debounce(term => {
 
                         <TBodyTr v-for="(req, index) of items" :key="index">
                             <TBodyTd>
-                                <Link v-if="req.card" class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.show', req.user)">
+                                <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.show', req.user)">
                                     <Icon icon="ph:user-bold" class="w-4 h-4" />
                                     <span>{{ req.user.name }}</span>
                                 </Link>

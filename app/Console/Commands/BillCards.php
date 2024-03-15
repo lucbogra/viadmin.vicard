@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\AutoNumber;
+use App\Models\Card;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -26,73 +28,76 @@ class BillCards extends Command
     /**
      * Execute the console command.
      */
+    public function createNumberingIfNot(string $key = 'invoice') {
+        AutoNumber::updateOrCreate(['key' => $key], [
+            'current_number' => 1,
+            'max_length' => 5
+        ]);
+    }
+
     public function handle()
     {
         $arg = $this->argument('arg') ?? null;
 
-        $accountOnwers = User::accountOwners()
-                                ->whereHas('cards')
-                                ->with(['cards' => function($query) {
-                                    $query->status('activated');
-                                }])
-                                ->get();
+        $cards = Card::status('activated')
+                    ->whereDay('created_at', date('d'))
+                    // ->whereDate('created_at', '!=', today())
+                    ->with(['owner' => [
+                        'cards' => function($query) {
+                            $query->status('activated');
+                        }
+                    ]])
+                    ->get();
 
-        $bar = $this->output->createProgressBar(count($accountOnwers));
+        $this->createNumberingIfNot();
+
+        $bar = $this->output->createProgressBar(count($cards));
  
         $bar->start();
 
-        $billedAccountCount = 0;
+        $billedCardCount = 0;
 
-        foreach ($accountOnwers as $key => $owner) {
+        foreach ($cards as $key => $card) {
+
+            $index = $card->owner->cards->search(function ($item) use ($card) {
+                return $item->id === $card->id;
+            });
+
+            $period = today();
 
             $format = "Y-m";
 
-            if ($arg == "lm") {
-
-                $period = today()->subMonth();
-
-            } else {
-
-                $period = today();
-
-            }
-
-            $orderNumber = Str::padLeft(random_int(0, 9999), 4, 0);
-
             $invoice = [
-                "invoice_number" => "INV{$period->format('ym')}$orderNumber",
-                "customer_id"  => $owner->id,
+                "customer_id"  => $card->owner->id,
                 "period"       => $period->format($format),
                 "currency"     => "USD",
                 "amount"       => 0,
-                "billed_cards" => [],
+                "card_id"      => $card->id,
                 "paid_at"      => null
             ];
 
-            $billedCards = [];
+            if ($index !== false) {
+                $rang = $index + 1;
 
-            foreach ($owner->cards as $key => $card) {
-                
-                $billedCards[] = [
-                    'card_id'     => $card->id,
-                    'card_number' => $card->card_number,
-                    'amount'      => $key == 0 
-                                        ? config('billing.first_card_cost') 
-                                        : config('billing.other_cards_cost'),
-                ];
+                if ($rang === 1) {
+                    $invoice["amount"] = config('billing.first_card_cost');
+                } else {
+                    $invoice["amount"] = config('billing.other_cards_cost');
+                }
 
+                // $message = "La carte $card->card_number se trouve au rang $rang/{$card->owner->cards->count()} dans la collection.";
+            } else {
+
+                continue;
             }
 
-            $invoice['billed_cards'] = $billedCards;
-            $invoice['amount'] = array_sum(array_column($billedCards, 'amount'));
+            if (!$card->owner->invoices()->where("period", $period->format($format))->where("card_id", $card->id)->first()) {
 
-            if (!$owner->invoices()->where("period", $period->format($format))->first()) {
+                $newInvoice = $card->owner->invoices()->create($invoice);
 
-                $newInvoice = $owner->invoices()->create($invoice);
+                $billedCardCount++;
 
-                $billedAccountCount++;
-
-                $owner->notify(new CardBilingNotification(invoice: $newInvoice, period: $period));
+                $card->owner->notify(new CardBilingNotification(invoice: $newInvoice, card: $card, period: $period));
 
             }
 
@@ -103,7 +108,88 @@ class BillCards extends Command
         $bar->finish();
 
         $this->newLine();
-        $this->info("Billing completed successfully. " . ($billedAccountCount . "/" . count($accountOnwers)) . " have been billed.");
+        $this->info("Billing completed successfully. " . ($billedCardCount . "/" . count($cards)) . " have been billed.");
 
     }
+
+    // public function handle()
+    // {
+    //     $arg = $this->argument('arg') ?? null;
+
+    //     $accountOnwers = User::accountOwners()
+    //                             ->whereHas('cards')
+    //                             ->with(['cards' => function($query) {
+    //                                 $query->status('activated');
+    //                             }])
+    //                             ->get();
+
+    //     $bar = $this->output->createProgressBar(count($accountOnwers));
+ 
+    //     $bar->start();
+
+    //     $billedAccountCount = 0;
+
+    //     foreach ($accountOnwers as $key => $owner) {
+
+    //         $format = "Y-m";
+
+    //         if ($arg == "lm") {
+
+    //             $period = today()->subMonth();
+
+    //         } else {
+
+    //             $period = today();
+
+    //         }
+
+    //         $orderNumber = Str::padLeft(random_int(0, 9999), 4, 0);
+
+    //         $invoice = [
+    //             "invoice_number" => "INV{$period->format('ym')}$orderNumber",
+    //             "customer_id"  => $owner->id,
+    //             "period"       => $period->format($format),
+    //             "currency"     => "USD",
+    //             "amount"       => 0,
+    //             "billed_cards" => [],
+    //             "paid_at"      => null
+    //         ];
+
+    //         $billedCards = [];
+
+    //         foreach ($owner->cards as $key => $card) {
+                
+    //             $billedCards[] = [
+    //                 'card_id'     => $card->id,
+    //                 'card_number' => $card->card_number,
+    //                 'amount'      => $key == 0 
+    //                                     ? config('billing.first_card_cost') 
+    //                                     : config('billing.other_cards_cost'),
+    //             ];
+
+    //         }
+
+    //         $invoice['billed_cards'] = $billedCards;
+    //         $invoice['amount'] = array_sum(array_column($billedCards, 'amount'));
+
+    //         if (!$owner->invoices()->where("period", $period->format($format))->first()) {
+
+    //             $newInvoice = $owner->invoices()->create($invoice);
+
+    //             $billedAccountCount++;
+
+    //             $owner->notify(new CardBilingNotification(invoice: $newInvoice, period: $period));
+
+    //         }
+
+    //         $bar->advance();
+
+    //     }
+
+    //     $bar->finish();
+
+    //     $this->newLine();
+    //     $this->info("Billing completed successfully. " . ($billedAccountCount . "/" . count($accountOnwers)) . " have been billed.");
+
+    // }
 }

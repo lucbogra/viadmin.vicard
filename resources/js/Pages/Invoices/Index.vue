@@ -81,7 +81,8 @@ watch(filterForm, debounce(term => {
                                             <el-select v-model="filterForm.status" placeholder="Filter by status" size="large" class="w-28">
                                                 <el-option :value="null" label="Status *" />
                                                 <el-option value="paid" label="Paid" />
-                                                <el-option value="unpaid" label="Unpaid" />
+                                                <el-option value="processing" label="Waiting for confirmation" />
+                                                <el-option value="pending" label="Pending" />
                                             </el-select>
                                         </div>
                                         
@@ -97,9 +98,9 @@ watch(filterForm, debounce(term => {
                         <template v-slot="{ items } = slotProps">
                             <THeadTr>
                                 <THeadTd :label="$t('Customer')" />
+                                <THeadTd :label="$t('Card')" />
                                 <THeadTd :label="$t('Inv N°')" />
                                 <THeadTd :label="$t('Month')" />
-                                <THeadTd :label="$t('Cards')" />
                                 <THeadTd :label="$t('Total Amount')" />
                                 <THeadTd :label="$t('Status')" />
                                 <THeadTd :label="$t('Billed at')" />
@@ -108,7 +109,20 @@ watch(filterForm, debounce(term => {
 
                             <TBodyTr v-for="(invoice, index) of items" :key="index">
                                 <TBodyTd :label="invoice?.customer?.name" bold />
-                                <TBodyTd :label="invoice?.invoice_number" bold />
+
+                                <TBodyTd>
+                                    <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.cards.show', {customer: invoice.customer, card: invoice.card})">
+                                        <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
+                                        <span>{{ invoice.card?.card_number }}</span>
+                                    </Link>
+                                </TBodyTd>
+
+                                <TBodyTd>
+                                    <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('invoices.show', {invoice: invoice.id})">
+                                        <Icon icon="ph:asterisk-bold" class="w-4 h-4" />
+                                        <span>{{ invoice?.invoice_number }}</span>
+                                    </Link>
+                                </TBodyTd>
 
                                 <TBodyTd>
                                     <h1 class="flex items-center space-x-1 text-gray-500 font-semibold">
@@ -118,25 +132,23 @@ watch(filterForm, debounce(term => {
                                 </TBodyTd>
 
                                 <TBodyTd>
-                                    <div v-if="invoice?.billed_cards?.length" class="flex items-center space-x-1">
-                                        <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
-                                        <span>{{ invoice?.billed_cards?.length }}</span>
-                                    </div>
-                                </TBodyTd>
-
-                                <TBodyTd>
                                     <span>{{ invoice?.amount.currency }} {{ invoice?.amount.amount }}</span>
                                 </TBodyTd>
                                 <!-- <pre>{{ invoice.period?.formatted }}</pre> -->
 
                                 <TBodyTd>
-                                    <span class="py-1 px-2 border rounded text-xs" 
+                                    <span class="py-1 px-2 border rounded inline-block w-full uppercase" 
                                             :class="{
-                                            'border-green-400 bg-green-100 text-green-600': invoice.paid_at?.original,
-                                            'border-red-400 bg-red-100 text-red-600': !invoice.paid_at?.original,
+                                            'border-green-400 bg-green-100 text-green-600': invoice.status == 'paid',
+                                            'border-orange-400 bg-orange-100 text-orange-600': invoice.status == 'processing',
+                                            'border-red-400 bg-red-100 text-red-600': invoice.status == 'pending',
                                         }">
-                                        <span v-if="invoice.paid_at?.formatted">Paid</span>
-                                        <span v-else>Unpaid</span>
+                                        <span style="font-size: .7em" class="inline-flex items-center space-x-1">
+                                            <Icon icon="icomoon-free:hour-glass" v-if="invoice.status == 'processing'" class="w-3 h-3" />
+                                            <Icon icon="nonicons:not-found-16" v-if="invoice.status == 'pending'" class="w-3 h-3" />
+                                            <Icon icon="line-md:check-all" v-if="invoice.status == 'paid'" class="w-3 h-3" />
+                                            <span>{{ invoice.payment_status }}</span>
+                                        </span>
                                     </span>
                                 </TBodyTd>
 
