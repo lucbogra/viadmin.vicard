@@ -18,7 +18,6 @@ return new class extends Migration
             $table->enum('status', CardRequest::STATUS);
             $table->timestamps();
             $table->softDeletes();
-
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

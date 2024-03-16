@@ -37,7 +37,7 @@ class Invoice extends Model
                 if ($this->status == 'paid') {
                     return 'Paid';
                 }
-                
+
                 if ($this->status == 'processing') {
                     return 'Waiting For Confirmation';
                 }
@@ -52,23 +52,29 @@ class Invoice extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $number = AutoNumber::where('key', 'invoice')->first();
+            // $number = AutoNumber::where('key', 'invoice')->first();
 
             $period = today();
+            $limit  = 99999;
+            $invoiceNumber = Invoice::count() + 1;
+
+            if ($invoiceNumber > $limit) {
+                $invoiceNumber = $invoiceNumber - $limit;
+            }
 
             $invoiceNumber = "INV";
             $invoiceNumber .= $period->format('ym');
-            $invoiceNumber .= Str::padLeft($number->current_number, $number->max_length, '0');
+            $invoiceNumber .= Str::padLeft(($invoiceNumber), strlen($limit), '0');
 
             $model->invoice_number = $invoiceNumber;
         });
-        
-        static::created(function ($model) {
 
-            $number = AutoNumber::where('key', 'invoice')->first();
-            $number->update(['current_number' => $number->current_number + 1]);
-            
-        });
+        // static::created(function ($model) {
+
+        //     // $number = AutoNumber::where('key', 'invoice')->first();
+        //     // $number->update(['current_number' => $number->current_number + 1]);
+
+        // });
     }
 
     public function scopeUnPaids($builder) {
