@@ -56,15 +56,15 @@ class Invoice extends Model
 
             $period = today();
             $limit  = 99999;
-            $invoiceNumber = Invoice::count() + 1;
+            $invoiceCount = Invoice::count() + 1;
 
-            if ($invoiceNumber > $limit) {
-                $invoiceNumber = $invoiceNumber - $limit;
+            if ($invoiceCount > $limit) {
+                $invoiceCount = $invoiceCount - $limit;
             }
 
             $invoiceNumber = "INV";
             $invoiceNumber .= $period->format('ym');
-            $invoiceNumber .= Str::padLeft(($invoiceNumber), strlen($limit), '0');
+            $invoiceNumber .= Str::padLeft(($invoiceCount), strlen($limit), '0');
 
             $model->invoice_number = $invoiceNumber;
         });
