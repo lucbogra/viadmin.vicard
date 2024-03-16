@@ -49,10 +49,10 @@ class BillCards extends Command
                     ]])
                     ->get();
 
-        $this->createNumberingIfNot();
+        // $this->createNumberingIfNot();
 
         $bar = $this->output->createProgressBar(count($cards));
- 
+
         $bar->start();
 
         $billedCardCount = 0;
@@ -124,7 +124,7 @@ class BillCards extends Command
     //                             ->get();
 
     //     $bar = $this->output->createProgressBar(count($accountOnwers));
- 
+
     //     $bar->start();
 
     //     $billedAccountCount = 0;
@@ -158,12 +158,12 @@ class BillCards extends Command
     //         $billedCards = [];
 
     //         foreach ($owner->cards as $key => $card) {
-                
+
     //             $billedCards[] = [
     //                 'card_id'     => $card->id,
     //                 'card_number' => $card->card_number,
-    //                 'amount'      => $key == 0 
-    //                                     ? config('billing.first_card_cost') 
+    //                 'amount'      => $key == 0
+    //                                     ? config('billing.first_card_cost')
     //                                     : config('billing.other_cards_cost'),
     //             ];
 
