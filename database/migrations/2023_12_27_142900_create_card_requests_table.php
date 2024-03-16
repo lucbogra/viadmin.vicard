@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id');
             $table->enum('status', CardRequest::STATUS);
+            $table->json('receips')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

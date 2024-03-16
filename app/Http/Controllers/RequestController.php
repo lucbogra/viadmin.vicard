@@ -25,7 +25,7 @@ class RequestController extends Controller
                 CardRequest::when($filter->status, function($query) use ($filter) {
                         $query->status($filter->status);
                     })
-                    ->with(['user'])
+                    ->with(['user', 'card'])
                     ->orderBy($filter->sort ?? 'created_at', $filter->order ?? 'desc')
                     ->paginate($filter->perPage)
                     ->withQueryString()

@@ -18,10 +18,12 @@ class CardRequestResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => new UserResource($this->whenLoaded('user')),
+            'card' => new CardResource($this->whenLoaded('card')),
             'status' => [
                 'key' => $this->status,
                 'label' => $this->getStatus($this->status)
             ],
+            'receips' => $this->receips,
             'created_at' => (new AppService)->dateFormatter($this->created_at),
             'updated_at' => (new AppService)->dateFormatter($this->updated_at),
         ];

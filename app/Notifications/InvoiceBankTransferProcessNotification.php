@@ -2,22 +2,24 @@
 
 namespace App\Notifications;
 
-use App\Models\Card;
-use App\Models\Invoice;
 use Carbon\Carbon;
+use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class CardBilingNotification extends Notification
+class InvoiceBankTransferProcessNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Invoice $invoice, public Card $card, public Carbon $period) { }
+    public function __construct(private Invoice $invoice)
+    {
+        //
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -47,11 +49,14 @@ class CardBilingNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        $period = Carbon::parse("{$this->invoice->period}-01")->format("M, Y");
+        $status = $this->invoice->status == 'paid' ? 'accepted' : 'rejected';
+
         return [
             'invoice_id' => $this->invoice->id,
-            'card_id'    => $this->card->id,
-            'period'     => $this->period->format("Y-m"),
-            'message'    => 'Invoice for card: ' . $this->card->card_number . ' month: ' . $this->period->format("M, Y")
+            'card_id'    => $this->invoice->card->id,
+            'period'     => $period,
+            'message'    => 'Payment for receipt ' . $this->invoice->card->card_number . ' of month ' . $period . ' has been ' . $status
         ];
     }
 }

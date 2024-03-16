@@ -31,8 +31,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
 
         Route::prefix('cards/{card}')->name('cards.')->group(function() {
-            Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
             Route::get('/', [CustomerController::class, 'cardShow'])->name('show');
+            Route::get('members', [CustomerController::class, 'cardMembers'])->name('members');
             Route::get('/transactions', [CustomerController::class, 'cardTransactions'])->name('transactions');
             Route::get('/edit', [CustomerController::class, 'cardEdit'])->name('edit');
             Route::put('/update', [CustomerController::class, 'cardUpdate'])->name('update');
@@ -67,6 +67,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::prefix('invoices')->name('invoices.')->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('index');
         Route::get('/{invoice}', [InvoiceController::class, 'show'])->name('show');
+        Route::put('/{invoice}', [InvoiceController::class, 'update'])->name('update');
     });
 
 

@@ -9,6 +9,7 @@
     import Avatar from '@/Components/Avatar.vue';
     import { useForm, usePage } from '@inertiajs/vue3';
     import { ref, watch } from 'vue';
+import { ElMessage } from 'element-plus';
 
     const props = defineProps({
         card: Object,
@@ -20,6 +21,7 @@
     const form = useForm({
         _method: "PUT",
         card_number: props.card.data.card_number,
+        nickname: props.card.data.nickname,
         card_validity: props.card.data.card_validity.db.short,
         card_limit: props.card.data.card_limit.amount * 1,
         card_status: props.card.data.card_status,
@@ -36,8 +38,6 @@
             preserveState: true,
             onSuccess: () => {
                 ElMessage.success(usePage().props?.flash?.success)
-
-                modalOnClose()
             },
             onError: () => {},
         })
@@ -60,6 +60,10 @@
                         
                         <FieldGroup :inline="false" id="card_number" :placeholder="$t('Card Number')" :input-error="form.errors.card_number" v-slot="slotProps">
                             <el-input disabled :placeholder="slotProps.placeholder" v-model="form.card_number" class="w-full" size="large" />
+                        </FieldGroup>
+                        
+                        <FieldGroup :inline="false" id="nickname" :placeholder="$t('Nickname')" :input-error="form.errors.nickname" v-slot="slotProps">
+                            <el-input :placeholder="slotProps.placeholder" v-model="form.nickname" class="w-full" size="large" />
                         </FieldGroup>
 
                         <FieldGroup :inline="false" id="card_validity" :placeholder="$t('Validity')" :input-error="form.errors.card_validity" v-slot="slotProps">

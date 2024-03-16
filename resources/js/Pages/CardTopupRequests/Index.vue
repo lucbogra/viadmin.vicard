@@ -107,21 +107,20 @@ watch(filterForm, debounce(term => {
 
                         <TBodyTr v-for="(req, index) of items" :key="index">
                             <TBodyTd>
-                                <Link :href="route('customers.cards.show', {customer: req.card?.owner, card: req.card})" class="text-xs bg-gray-500 py-2 rounded text-white block">
-                                    <div class="px-2 relative">
-                                        <div class="absolute top-0 right-0 p-2">
+                                <Link :href="route('customers.cards.show', {customer: req.card?.owner, card: req.card})" class="text-xs py-2 group block">
+                                    <div class="">
+                                        <!-- <div class="absolute top-0 right-0 p-2">
                                             <Icon icon="solar:card-broken" class="h-6 w-6" />
-                                            <!-- <Icon icon="flat-color-icons:sim-card-chip" class="h-10 w-10" /> -->
-                                        </div>
-                                        <h1 class="flex items-center space-x-1">
+                                        </div> -->
+                                        <h1 class="flex items-center space-x-1 group-hover:text-blue-800 group-hover:underline">
                                             <Icon icon="solar:card-broken" class="w-4 h-4" />
                                             <span>{{ req.card?.card_number }}</span>
                                         </h1>
-                                        <h1 v-if="req.transaction" class="flex items-center space-x-1">
+                                        <h1 v-if="req.transaction" class="flex items-center space-x-1 group-hover:text-blue-800 group-hover:underline">
                                             <Icon icon="mynaui:credit-card-plus" class="w-4 h-4" />
                                             <span>{{ req.transaction.amount.amount }}</span>
                                         </h1>
-                                        <h1 class="flex items-center space-x-1">
+                                        <h1 class="flex items-center space-x-1 group-hover:text-blue-800 group-hover:underline">
                                             <Icon icon="ph:user" class="w-4 h-4" />
                                             <span>{{ req.card?.owner?.name }}</span>
                                         </h1>

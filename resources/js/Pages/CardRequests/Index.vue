@@ -100,6 +100,8 @@ watch(filterForm, debounce(term => {
                         <THeadTr>
                             <THeadTd :label="$t('User')" />
                             <THeadTd :label="$t('Status')" />
+                            <THeadTd :label="$t('Receips')" />
+                            <THeadTd :label="$t('Card')" />
                             <THeadTd :label="$t('Date')" />
                             <THeadTd :label="$t('actions')" position="end"
                             />
@@ -107,7 +109,10 @@ watch(filterForm, debounce(term => {
 
                         <TBodyTr v-for="(req, index) of items" :key="index">
                             <TBodyTd>
-                                <Link class="hover:text-blue-600 hover:font-semibold" :href="route('customers.show', req.user)">{{ req.user.name }}</Link>
+                                <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.show', req.user)">
+                                    <Icon icon="ph:user-bold" class="w-4 h-4" />
+                                    <span>{{ req.user.name }}</span>
+                                </Link>
                             </TBodyTd>
                             <TBodyTd>
                                 <span class="py-1 px-2 border rounded text-xs" 
@@ -118,6 +123,18 @@ watch(filterForm, debounce(term => {
                                     }">
                                     {{ req.status.label }}
                                 </span>
+                            </TBodyTd>
+                            <TBodyTd>
+                                <span v-if="req.receips?.length" class="py-1 px-2 border rounded text-xs inline-flex" @click="selectedItem = req, modal = 'details', showModal = true">
+                                    <Icon icon="ic:baseline-attach-file" class="w-4 h-4" />
+                                    <span>{{ req.receips.length }} files</span>
+                                </span>
+                            </TBodyTd>
+                            <TBodyTd>
+                                <Link v-if="req.card" class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.cards.show', {customer: req.user, card: req.card})">
+                                    <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
+                                    <span>{{ req.card.card_number }}</span>
+                                </Link>
                             </TBodyTd>
                             <TBodyTd :label="req?.created_at?.formatted" />
                             <TBodyTd class="space-x-1 flex justify-end">

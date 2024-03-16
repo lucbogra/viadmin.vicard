@@ -106,36 +106,49 @@ const props = defineProps({
                         
                     </div>
                 </div>
-                <div v-else>
-                    <div class="flex space-x-2">
-                        <NavLink class="space-x-1" :href="route('customers.show', {customer: customer})">
-                            <Icon icon="bx:arrow-back" class="h-4 w-4" />
-                            <span>Back to customer profile</span>
-                        </NavLink>
+                <div v-else class="w-full">
+                    <div class="flex justify-between">
+                        <div class="flex-1 flex space-x-2">
+                            <NavLink class="space-x-1" :href="route('customers.show', {customer: customer})">
+                                <Icon icon="bx:arrow-back" class="h-4 w-4" />
+                                <span>Back to customer profile</span>
+                            </NavLink>
 
-                        <NavLink class="space-x-1" :href="route('customers.cards.edit', {customer: customer, card: card})"
-                                :active="route().current('customers.cards.edit')">
-                            <Icon icon="mdi:credit-card-edit-outline" class="h-4 w-4" />
-                            <span>Edit Card</span>
-                        </NavLink>
+                            <NavLink class="space-x-1" :href="route('customers.cards.edit', {customer: customer, card: card})"
+                                    :active="route().current('customers.cards.edit')">
+                                <Icon icon="mdi:credit-card-edit-outline" class="h-4 w-4" />
+                                <span>Edit Card</span>
+                            </NavLink>
 
-                        <NavLink class="space-x-1" :href="route('customers.cards.transactions', {customer: customer, card: card})"
-                                :active="route().current('customers.cards.transactions')">
-                            <Icon icon="grommet-icons:transaction" class="h-4 w-4" />
-                            <span>Card transactions</span>
-                        </NavLink>
+                            <NavLink class="space-x-1" :href="route('customers.cards.transactions', {customer: customer, card: card})"
+                                    :active="route().current('customers.cards.transactions')">
+                                <Icon icon="grommet-icons:transaction" class="h-4 w-4" />
+                                <span>Card transactions</span>
+                            </NavLink>
 
-                        <NavLink class="space-x-1" :href="route('customers.cards.show', {customer: customer, card: card})"
-                                :active="route().current('customers.cards.show')">
-                            <Icon icon="ion:card-outline" class="h-4 w-4" />
-                            <span>Card details</span>
-                        </NavLink>
+                            <NavLink class="space-x-1" :href="route('customers.cards.show', {customer: customer, card: card})"
+                                    :active="route().current('customers.cards.show')">
+                                <Icon icon="ion:card-outline" class="h-4 w-4" />
+                                <span>Card details</span>
+                            </NavLink>
 
-                        <NavLink class="space-x-1" :href="route('customers.cards.members', {customer: customer, card: card})"
-                                :active="route().current('customers.cards.members')">
-                            <Icon icon="ph:users-three-bold" class="h-4 w-4" />
-                            <span>Members</span>
-                        </NavLink>
+                            <NavLink class="space-x-1" :href="route('customers.cards.members', {customer: customer, card: card})"
+                                    :active="route().current('customers.cards.members')">
+                                <Icon icon="ph:users-three-bold" class="h-4 w-4" />
+                                <span>Members</span>
+                            </NavLink>
+                        </div>
+
+                        <div>
+                            <span style="font-size: .7em;" class="py-1 px-2 border rounded uppercase" 
+                                        :class="{
+                                        'border-green-400 bg-green-100 text-green-600': card.card_status == 'activated',
+                                        'border-red-400 bg-red-100 text-red-600': card.card_status == 'frozen',
+                                        'border-orange-400 bg-orange-100 text-orange-600': card.card_status == 'not activated',
+                                    }">
+                                    Card: {{ card.card_status }}
+                                </span>
+                        </div>
                     </div>
                 </div>
 

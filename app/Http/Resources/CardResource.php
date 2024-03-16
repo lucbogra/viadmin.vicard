@@ -18,6 +18,7 @@ class CardResource extends JsonResource
         return [
             'id' => $this->id,
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'nickname' => $this->nickname,
             'card_number' => $this->card_number,
             'card_limit' => $this->card_limit,
             'card_type' => $this->card_type,

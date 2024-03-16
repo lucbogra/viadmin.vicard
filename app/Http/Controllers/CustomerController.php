@@ -110,6 +110,7 @@ class CustomerController extends Controller
     {
         $card->update([
             // 'card_number' => $cardRequestRequest->card_number,
+            'nickname' => $cardRequestRequest->nickname,
             'card_validity' => $cardRequestRequest->card_validity,
             'card_limit' => $cardRequestRequest->card_limit,
             'daily_limit' => $cardRequestRequest->daily_limit,
@@ -275,6 +276,7 @@ class CustomerController extends Controller
             $card = Card::create([
                 'owner_id' => $cardRequest->user_id,
                 'card_request_id' => $cardRequest->id,
+                'nickname' => $cardRequestRequest->nickname,
                 'card_number' => $cardRequestRequest->card_number,
                 'card_validity' => $cardRequestRequest->card_validity,
                 'card_limit' => $cardRequestRequest->card_limit,

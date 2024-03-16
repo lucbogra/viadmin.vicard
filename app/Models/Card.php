@@ -41,7 +41,7 @@ class Card extends Model
     }
 
     public function scopeSearch($builder, $term) {
-        $builder->where("card_number", "like", "%$term%");
+        $builder->where("card_number", "like", "%$term%")->orWhere("nickname", "like", "%$term%");
     }
     
     public function owner() : BelongsTo {

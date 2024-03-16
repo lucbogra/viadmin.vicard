@@ -53,9 +53,12 @@
                 </div>
 
                 <div class="flex justify-between items-end">
-                    <span :style="small ? 'font-size: .3em;' : 'font-size: .5em;'" class="uppercase mb-3">Valid only for advertising</span>
+                    <div class="flex flex-col">
+                        <h3 class="font-ocr">{{ card.nickname }}</h3>
+                        <span style="font-size: .5em;" class="uppercase mb-2">Valid only for advertising</span>
+                    </div>
                     <div>
-                        <Icon icon="simple-icons:visa" :class="small ? 'h-10 w-10' : 'h-14 w-14'" />
+                        <Icon icon="simple-icons:visa" class="h-14 w-14" />
                     </div>
                 </div>
             </div>

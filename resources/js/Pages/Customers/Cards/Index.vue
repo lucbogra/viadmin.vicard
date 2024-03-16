@@ -21,6 +21,7 @@ import {
     buildFilterForm,
     tableLoading
 } from "@/Components/Table";
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     cards: Object,
@@ -112,8 +113,18 @@ watch(filterForm, debounce(term => {
                         </THeadTr>
 
                         <TBodyTr v-for="(item, index) of items" :key="index">
-                            <TBodyTd :label="item.owner?.name" />
-                            <TBodyTd :label="item.card_number" />
+                            <TBodyTd>
+                                <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.show', item.owner)">
+                                    <Icon icon="ph:user-bold" class="w-4 h-4" />
+                                    <span>{{ item.owner?.name }}</span>
+                                </Link>
+                            </TBodyTd>
+                            <TBodyTd>
+                                <Link class="hover:text-blue-800 underline flex items-center space-x-1" :href="route('customers.cards.show', {customer: item.owner, card: item})">
+                                    <Icon icon="iconoir:credit-cards" class="w-4 h-4" />
+                                    <span>{{ item.card_number }}</span>
+                                </Link>
+                            </TBodyTd>
                             <TBodyTd :label="item.card_validity.formatted" />
                             <TBodyTd :label="item.card_type" />
                             <TBodyTd :label="item.card_balance.amount" />

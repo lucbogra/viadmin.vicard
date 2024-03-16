@@ -19,16 +19,20 @@ class InvoiceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'billed_cards' => $this->buildBilledCards($this->billed_cards),
+            // 'billed_cards' => $this->buildBilledCards($this->billed_cards),
             'id' => $this->id,
             'period' => [
                 'original'  => $this->period,
                 'formatted' => Carbon::parse("{$this->period}-01")->format("M, Y")
             ],
+            'status' => $this->status,
+            'receips' => $this->receips,
+            'payment_status' => $this->payment_status,
             'invoice_number' => $this->invoice_number,
             'amount' => $this->amount,
             'payment_method' => $this->payment_method,
             'customer' => new CustomerResource($this->whenLoaded("customer")),
+            'card' => new CardResource($this->whenLoaded("card")),
             'paid_at' => (new AppService)->dateFormatter($this->paid_at),
             'created_at' => (new AppService)->dateFormatter($this->created_at),
             'updated_at' => (new AppService)->dateFormatter($this->updated_at),
