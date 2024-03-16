@@ -52,15 +52,36 @@ class CardRequestRequest extends FormRequest
                     'card_number' => ['required', 'string', 'max:100', 'unique:cards'],
                     'card_validity' => ['required', 'date_format:Y-m-d'],
                     'card_limit' => ['required', 'numeric', 'min:0'],
-                    // 'card_fees' => ['required', 'numeric', 'min:0'],
+                    'make_a_deposit' => ['boolean'],
                     'daily_limit' => ['required', 'numeric', 'min:0'],
                     'per_transaction_limit' => ['required', 'numeric', 'min:0'],
                     'card_status' => ['in:activated,not activated,frozen'],
                     'card_type' => ['in:virtual,physical'],
                 ]
             ];
+
+            if($this->make_a_deposit) {
+                $cardLimit = (int) $this->card_limit;
+
+                $rule = [...$rule, ...[
+                        'amount' => ['required', 'numeric', 'min:1', 'max:' . $cardLimit]
+                    ]
+                ];
+
+            }
         }
+
+        // dd($rule);
 
         return $rule;
     }
+
+    public function messages() {
+
+        return [
+            "amount.max" => "Can no longer add more than {$this->card_limit} due to the limit of this card which is {$this->card_limit}"
+        ];
+
+    }
 }
+
