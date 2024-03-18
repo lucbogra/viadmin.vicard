@@ -16,6 +16,16 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // DB::table('card_user')->truncate();
+        // DB::table('cards')->truncate();
+        // DB::table('card_requests')->truncate();
+        // DB::table('card_top_up_requests')->truncate();
+        // DB::table('invoices')->truncate();
+        // DB::table('transactions')->truncate();
+        // DB::table('notifications')->truncate();
+        // DB::table('transactions')->truncate();
+        // DB::table('users')->truncate();
+
         DB::table('role_has_permissions')->delete();
         DB::table('model_has_roles')->delete();
         DB::table('roles')->delete();

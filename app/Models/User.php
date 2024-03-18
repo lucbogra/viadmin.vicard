@@ -83,6 +83,12 @@ class User extends Authenticatable
                 ->orWhere("email", "LIKE", "%$term%");
     }
 
+    public function scopeAdmins($builder) {
+        $builder->whereHas("roles", function($query) {
+            $query->where("roles.name", 'Admin');
+        });
+    }
+
     public function scopeAccountOwners($builder) {
         $builder->whereHas("roles", function($query) {
             $query->where("roles.name", User::CUSTOMERS_ROLE_ACCOUNT_OWNER);

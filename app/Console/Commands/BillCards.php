@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use App\Notifications\CardBilingNotification;
+use Carbon\Carbon;
 
 class BillCards extends Command
 {
@@ -16,7 +17,7 @@ class BillCards extends Command
      *
      * @var string
      */
-    protected $signature = 'bill:cards {arg?}';
+    protected $signature = 'bill:cards {day?} {month?}';
 
     /**
      * The console command description.
@@ -28,19 +29,20 @@ class BillCards extends Command
     /**
      * Execute the console command.
      */
-    public function createNumberingIfNot(string $key = 'invoice') {
-        AutoNumber::updateOrCreate(['key' => $key], [
-            'current_number' => 1,
-            'max_length' => 5
-        ]);
-    }
-
     public function handle()
     {
-        $arg = $this->argument('arg') ?? null;
+        $day    = $this->argument('day') ?? date('d');
+        $month  = $this->argument('month') ?? date('m');
+        $endDay = $day;
+        $date   = Carbon::parse(date("Y-$month-$day"));
+    
+        if ($date->copy()->addDay()->format('d') == '01') {
+            $endDay = 31;
+        }
 
         $cards = Card::status('activated')
-                    ->whereDay('created_at', date('d'))
+                    ->whereDay('created_at', '>=', $day)
+                    ->whereDay('created_at', '<=', $endDay)
                     // ->whereDate('created_at', '!=', today())
                     ->with(['owner' => [
                         'cards' => function($query) {
@@ -63,9 +65,8 @@ class BillCards extends Command
                 return $item->id === $card->id;
             });
 
-            $period = today();
-
-            $format = "Y-m";
+            $period = $card->created_at;
+            $format = "Y-" . Str::padLeft($month, 2, 0);
 
             $invoice = [
                 "customer_id"  => $card->owner->id,
@@ -110,6 +111,13 @@ class BillCards extends Command
         $this->newLine();
         $this->info("Billing completed successfully. " . ($billedCardCount . "/" . count($cards)) . " have been billed.");
 
+    }
+
+    public function createNumberingIfNot(string $key = 'invoice') {
+        AutoNumber::updateOrCreate(['key' => $key], [
+            'current_number' => 1,
+            'max_length' => 5
+        ]);
     }
 
     // public function handle()

@@ -34,6 +34,33 @@ class Card extends Model
         "card_fees"             => Money::class
     ];
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::saved(function ($model) {
+
+    //         $period = today();
+
+    //         $format = "Y-m";
+        
+    //         $invoice = [
+    //             "customer_id"  => $model->owner->id,
+    //             "period"       => $period->format($format),
+    //             "currency"     => "USD",
+    //             "amount"       => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
+    //             "card_id"      => $model->id,
+    //             "payment_method" => "Bank Transfer",
+    //             "status"         => "paid",
+    //             "receips"        => $cardRequest->receips,
+    //             "paid_at"        => $cardRequest->created_at
+    //         ];
+        
+    //         $cardRequest->user->invoices()->create($invoice);
+
+    //     });
+    // }
+
     public function scopeStatus($builder, $filter) {
 
         $builder->where('card_status', $filter);
