@@ -1,13 +1,15 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Card;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\CodInvestor\TopUpController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CodInvestor\TopUpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,31 @@ use App\Http\Controllers\DashboardController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', function() {
+    $day    = request()->day?? date('d');
+    $month  = request()->month?? date('m');
+    $endDay = $day;
+
+    $date = Carbon::parse(date("Y-$month-$day"));
+
+    if ($date->copy()->addDay()->format('d') == '01') {
+        $endDay = 31;
+    }
+
+    $cards = Card::status('activated')
+                ->whereDay('created_at', '>=', $day)
+                ->whereDay('created_at', '<=', $endDay)
+                // ->whereDate('created_at', '!=', today())
+                // ->with(['owner' => [
+                //     'cards' => function($query) {
+                //         $query->status('activated');
+                //     }
+                // ]])
+                ->get()
+                ->pluck('created_at');
+    return $cards;
+});
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'admin'])->group(function () {
 

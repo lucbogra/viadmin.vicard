@@ -54,19 +54,21 @@ class Invoice extends Model
         static::creating(function ($model) {
             // $number = AutoNumber::where('key', 'invoice')->first();
 
-            $period = today();
-            $limit  = 99999;
-            $invoiceNumber = Invoice::count() + 1;
-
-            if ($invoiceNumber > $limit) {
-                $invoiceNumber = $invoiceNumber - $limit;
+            if (!$model->invoice_number) {
+                $period = today();
+                $limit  = 99999;
+                $invoiceCount = Invoice::count() + 1;
+    
+                if ($invoiceCount > $limit) {
+                    $invoiceCount = $invoiceCount - $limit;
+                }
+    
+                $invoiceNumber = "INV";
+                $invoiceNumber .= $period->format('ym');
+                $invoiceNumber .= Str::padLeft(($invoiceCount), strlen($limit), '0');
+    
+                $model->invoice_number = $invoiceNumber;
             }
-
-            $invoiceNumber = "INV";
-            $invoiceNumber .= $period->format('ym');
-            $invoiceNumber .= Str::padLeft(($invoiceNumber), strlen($limit), '0');
-
-            $model->invoice_number = $invoiceNumber;
         });
 
         // static::created(function ($model) {

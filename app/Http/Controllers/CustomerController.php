@@ -270,8 +270,10 @@ class CustomerController extends Controller
     public function cardRequestValidation(User $customer, CardRequest $cardRequest, CardRequestRequest $cardRequestRequest)
     {
         $card = new Card;
-
+        // dd($cardRequestRequest->make_a_deposit, $cardRequestRequest->amount);
         if ($cardRequestRequest->status == 'validated') {
+
+            $isFirstCard = $cardRequest->user->cards->count() == 0;
 
             $card = Card::create([
                 'owner_id' => $cardRequest->user_id,
@@ -280,13 +282,45 @@ class CustomerController extends Controller
                 'card_number' => $cardRequestRequest->card_number,
                 'card_validity' => $cardRequestRequest->card_validity,
                 'card_limit' => $cardRequestRequest->card_limit,
-                'card_fees' => 25,
+                'card_fees' => 0,
                 'card_balance' => 0,
                 'daily_limit' => $cardRequestRequest->daily_limit,
                 'per_transaction_limit' => $cardRequestRequest->per_transaction_limit,
                 'card_status' => $cardRequestRequest->card_status,
                 'card_type' => $cardRequestRequest->card_type,
             ]);
+
+            if ($cardRequestRequest->make_a_deposit && $cardRequestRequest->amount > 0) {
+
+                $card->transactions()->create([
+                    'user_id' => auth()->id(),
+                    'type' => 'deposit',
+                    'method' => 'bank transfer',
+                    'confirmed' => true,
+                    'date' => today(),
+                    'amount' => $cardRequestRequest->amount,
+                    'currency' => 'USD',
+                ]);
+
+            }
+
+            $period = today();
+
+            $format = "Y-m";
+
+            $invoice = [
+                "customer_id"  => $card->owner->id,
+                "period"       => $period->format($format),
+                "currency"     => "USD",
+                "amount"       => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
+                "card_id"      => $card->id,
+                "payment_method" => "Bank Transfer",
+                "status"         => "paid",
+                "receips"        => $cardRequest->receips,
+                "paid_at"        => $cardRequest->created_at
+            ];
+
+            $cardRequest->user->invoices()->create($invoice);
 
             $customer->cards()->attach($card, attributes: [
                 'owner' => true,

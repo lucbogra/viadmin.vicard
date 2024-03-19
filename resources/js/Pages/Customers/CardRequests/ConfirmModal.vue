@@ -90,6 +90,18 @@
                                     </el-radio-group>
                                 </div>
                             </FieldGroup>
+
+                            <div class="py-3 px-4 bg-gray-200 rounded space-y-4">
+                                <div>
+                                    <el-checkbox v-model="form.make_a_deposit">Make a deposit ?</el-checkbox>
+                                </div>
+
+                                <FieldGroup v-if="form.make_a_deposit" :inline="false" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
+                                    <el-input :placeholder="slotProps.placeholder" v-model="form.amount" class="w-full" size="large">
+                                        <template #prepend>USD</template>
+                                    </el-input>
+                                </FieldGroup>
+                            </div>
                         </div>
 
                         <div class="space-x-1">
@@ -152,7 +164,6 @@
     const form = useForm({
         _method: "POST",
         status: 'pending',
-
         nickname: null,
         card_number: null,
         card_validity: null,
@@ -161,8 +172,9 @@
         card_type: 0,
         daily_limit: null,
         per_transaction_limit: null,
+        make_a_deposit: false,
+        amount: 0,
         card_fees: null,
-
         confirm: 'no',
     });
 
