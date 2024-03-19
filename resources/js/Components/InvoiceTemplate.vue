@@ -32,11 +32,13 @@ const props = defineProps({
                                     'text-green-600': invoice.status == 'paid',
                                     'text-orange-600': invoice.status == 'processing',
                                     'text-red-600': invoice.status == 'pending',
+                                    'text-red-800': invoice.status == 'reject'
                                 }">
                                 <span style="font-size: .7em" class="inline-flex items-center space-x-1">
                                     <Icon icon="icomoon-free:hour-glass" v-if="invoice.status == 'processing'" class="w-3 h-3" />
-                                    <Icon icon="nonicons:not-found-16" v-if="invoice.status == 'pending'" class="w-3 h-3" />
+                                    <Icon icon="mage:hour-glass" v-if="invoice.status == 'pending'" class="w-3 h-3" />
                                     <Icon icon="line-md:check-all" v-if="invoice.status == 'paid'" class="w-3 h-3" />
+                                    <Icon icon="lucide:file-x-2" v-if="invoice.status == 'reject'" class="w-3 h-3" />
                                     <span>{{ invoice.payment_status }}</span>
                                 </span>
                             </span>
