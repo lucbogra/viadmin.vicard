@@ -60,22 +60,17 @@ watch(filterForm, debounce(term => {
                     <Description 
                         icon="f7:number"
                         title="Card Limit"
-                        :value="card.data.card_limit.amount"
+                        :value="`${card.data.card_limit.currency} ${card.data.card_limit.amount}`"
                     />
                     <Description 
                         icon="f7:number"
                         title="Daily Limit"
-                        :value="card.data.daily_limit.amount"
+                        :value="`${card.data.daily_limit.currency} ${card.data.daily_limit.amount}`"
                     />
                     <Description 
                         icon="f7:number"
                         title="Limit per transaction"
-                        :value="card.data.per_transaction_limit.amount"
-                    />
-                    <Description 
-                        icon="f7:number"
-                        title="Card Fees"
-                        :value="card.data.card_fees.amount"
+                        :value="`${card.data.per_transaction_limit.currency} ${card.data.per_transaction_limit.amount}`"
                     />
                     <Description 
                         icon="f7:number"
@@ -96,6 +91,11 @@ watch(filterForm, debounce(term => {
                         icon="f7:number"
                         title="Owner"
                         :value="card.data.owner?.name"
+                    />
+                    <Description 
+                        icon="f7:number"
+                        title="Nickname"
+                        :value="card.data.nickname"
                     />
                 </div>
                 <!-- <pre>{{ card.data }}</pre> -->

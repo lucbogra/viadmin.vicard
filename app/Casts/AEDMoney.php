@@ -5,7 +5,7 @@ namespace App\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class Money implements CastsAttributes
+class AEDMoney implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -16,7 +16,7 @@ class Money implements CastsAttributes
     {
         if($value == null) $value = 0;
 
-        return \Brick\Money\Money::ofMinor($value, config('currency.invoice_currency'));
+        return \Brick\Money\Money::ofMinor($value, config('currency.currency'));
         // return \Brick\Money\Money::ofMinor($value, $attributes['currency']);
     }
 

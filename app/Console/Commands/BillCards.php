@@ -71,7 +71,7 @@ class BillCards extends Command
             $invoice = [
                 "customer_id"  => $card->owner->id,
                 "period"       => $period->format($format),
-                "currency"     => "USD",
+                "currency"     => config('currency.invoice_currency'),
                 "amount"       => 0,
                 "card_id"      => $card->id,
                 "paid_at"      => null

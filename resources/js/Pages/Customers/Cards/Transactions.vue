@@ -55,10 +55,28 @@ watch(filterForm, debounce(term => {
             <div class=" bg-white mx-10 py-10">
                 <div class="flex justify-between px-10">
                     <h5 class="mb-5 text-xl font-bold">Card Transactions</h5>
-                    <h5 class="mb-5 text-xl font-bold px-3 py-1 rounded space-x-1 bg-gray-800">
-                        <span class="text-gray-300">Balance: </span>
-                        <span class="text-white">{{ card.data.card_balance.currency }}</span>
-                        <span class="text-white">{{ card.data.card_balance.amount }}</span>
+                    <h5 class="mb-5 px-3 py-1 rounded">
+                        <div class="flex justify-between text-sm bg-green-100">
+                            <span class="text-gray-500">Total deposit </span>
+                            <div class="flex ml-2 space-x-1">
+                                <span class="text-gray-700">{{ card.data.total_transactions.deposit.currency }}</span>
+                                <span class="text-gray-700">{{ card.data.total_transactions.deposit.amount }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-sm bg-red-100">
+                            <span class="text-gray-500">Total withdraw </span>
+                            <div class="flex ml-2 space-x-1">
+                                <span class="text-gray-700">{{ card.data.total_transactions.withdraw.currency }}</span>
+                                <span class="text-gray-700">{{ card.data.total_transactions.withdraw.amount }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xl font-bold">
+                            <span class="text-gray-500">Balance </span>
+                            <div class="flex ml-2 space-x-1">
+                                <span class="text-gray-700">{{ card.data.card_balance.currency }}</span>
+                                <span class="text-gray-700">{{ card.data.card_balance.amount }}</span>
+                            </div>
+                        </div>
                     </h5>
                 </div>
   
@@ -148,7 +166,7 @@ watch(filterForm, debounce(term => {
                             <TBodyTd :label="item.user?.name" class="uppercase" />
                             <TBodyTd class="uppercase" bold position="end">
                                 <div class="text-end" :class="item.type == 'deposit' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'">
-                                    {{ item.type == 'deposit' ? '+' : '-' }}{{ item.amount.amount }}
+                                    {{ item.type == 'deposit' ? '+' : '-' }} {{ item.amount.currency }} {{ item.amount.amount }}
                                 </div>
                             </TBodyTd>
                             <TBodyTd class="uppercase" bold position="end">

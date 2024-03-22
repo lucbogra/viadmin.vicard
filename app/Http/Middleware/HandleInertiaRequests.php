@@ -47,6 +47,10 @@ class HandleInertiaRequests extends Middleware
                 'warning' => session('warning'),
                 'error'   => session('error'),
             ],
+            'currenry' => [
+                'global' => config('currency.currency'),
+                'invoice' => config('currency.invoice_currency'),
+            ],
             'notifications' => $user ? (new AppService)->notifications() : null,
             'un_reads_notifications' => $user ? (new AppService)->notifications(unReads: true) : null,
         ]);

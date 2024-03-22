@@ -55,19 +55,19 @@
                             <div class="grid grid-cols-1 gap-4">
                                 <FieldGroup :inline="false" id="card_limit" :placeholder="$t('Card Limit')" :input-error="form.errors.card_limit" v-slot="slotProps">
                                     <el-input :placeholder="slotProps.placeholder" v-model="form.card_limit" class="w-full" size="large">
-                                        <template #prepend>USD</template>
+                                        <template #prepend>{{ $page.props.currenry?.global }}</template>
                                     </el-input>
                                 </FieldGroup>
 
                                 <FieldGroup :inline="false" id="daily_limit" :placeholder="$t('Daily Limit')" :input-error="form.errors.daily_limit" v-slot="slotProps">
                                     <el-input :placeholder="slotProps.placeholder" v-model="form.daily_limit" class="w-full" size="large">
-                                        <template #prepend>USD</template>
+                                        <template #prepend>{{ $page.props.currenry?.global }}</template>
                                     </el-input>
                                 </FieldGroup>
 
                                 <FieldGroup :inline="false" id="per_transaction_limit" :placeholder="$t('Limit Per Transaction')" :input-error="form.errors.per_transaction_limit" v-slot="slotProps">
                                     <el-input :placeholder="slotProps.placeholder" v-model="form.per_transaction_limit" class="w-full" size="large">
-                                        <template #prepend>USD</template>
+                                        <template #prepend>{{ $page.props.currenry?.global }}</template>
                                     </el-input>
                                 </FieldGroup>
                             </div>
@@ -98,7 +98,7 @@
 
                                 <FieldGroup v-if="form.make_a_deposit" :inline="false" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
                                     <el-input :placeholder="slotProps.placeholder" v-model="form.amount" class="w-full" size="large">
-                                        <template #prepend>USD</template>
+                                        <template #prepend>{{ $page.props.currenry?.global }}</template>
                                     </el-input>
                                 </FieldGroup>
                             </div>

@@ -241,7 +241,7 @@ class CustomerController extends Controller
             'merchant_id' => $cardWithdrawRequest->merchant,
             'date' => $cardWithdrawRequest->date,
             'amount' => $cardWithdrawRequest->amount,
-            'currency' => 'USD',
+            'currency' => config('currency.currency'),
         ]);
 
         return redirect()->back()->with('success', __('The card has been recharged successfully'));
@@ -299,7 +299,7 @@ class CustomerController extends Controller
                     'confirmed' => true,
                     'date' => today(),
                     'amount' => $cardRequestRequest->amount,
-                    'currency' => 'USD',
+                    'currency' => config('currency.currency'),
                 ]);
 
             }
@@ -311,7 +311,7 @@ class CustomerController extends Controller
             $invoice = [
                 "customer_id"  => $card->owner->id,
                 "period"       => $period->format($format),
-                "currency"     => "USD",
+                "currency"     => config('currency.currency'),
                 "amount"       => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
                 "card_id"      => $card->id,
                 "payment_method" => "Bank Transfer",
@@ -370,7 +370,7 @@ class CustomerController extends Controller
                 'confirmed' => true,
                 'date' => $cardTopupRequestRequest->date,
                 'amount' => $cardTopupRequestRequest->amount,
-                'currency' => 'USD',
+                'currency' => config('currency.currency'),
             ]);
 
             $cardRequest->update([
