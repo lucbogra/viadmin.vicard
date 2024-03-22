@@ -15,7 +15,7 @@
 
                         <FieldGroup :inline="true" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
                             <el-input :placeholder="slotProps.placeholder" v-model="form.amount" class="w-full" size="large">
-                                <template #prepend>USD</template>
+                                <template #prepend>{{ $page.props.currenry?.global }}</template>
                             </el-input>
                         </FieldGroup>
                         

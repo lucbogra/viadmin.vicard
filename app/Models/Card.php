@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\Money;
+use App\Casts\AEDMoney;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,11 +27,11 @@ class Card extends Model
 
     protected $casts = [
         "card_validity"         => 'date:Y-m-d',
-        "card_balance"          => Money::class,
-        "card_limit"            => Money::class,
-        "daily_limit"           => Money::class,
-        "per_transaction_limit" => Money::class,
-        "card_fees"             => Money::class
+        "card_balance"          => AEDMoney::class,
+        "card_limit"            => AEDMoney::class,
+        "daily_limit"           => AEDMoney::class,
+        "per_transaction_limit" => AEDMoney::class,
+        "card_fees"             => AEDMoney::class
     ];
 
     // protected static function boot()

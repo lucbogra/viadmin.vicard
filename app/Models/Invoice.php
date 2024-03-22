@@ -42,6 +42,10 @@ class Invoice extends Model
                     return 'Waiting For Confirmation';
                 }
 
+                if ($this->status == 'reject') {
+                    return 'Rejected:Pending';
+                }
+
                 return 'Pending';
             },
         );

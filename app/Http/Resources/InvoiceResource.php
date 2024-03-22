@@ -53,7 +53,7 @@ class InvoiceResource extends JsonResource
                 
                 $cards[] = [
                     "card_number" => $card->card_number,
-                    "amount" => Money::of(data_get($billedCard, 'amount'), 'USD')
+                    "amount" => Money::of(data_get($billedCard, 'amount'), config('currency.invoice_currency'))
                 ];
 
             }

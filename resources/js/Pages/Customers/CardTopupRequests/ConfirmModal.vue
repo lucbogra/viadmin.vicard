@@ -37,7 +37,7 @@
                     <div v-if="form.status == 'validated'" class="space-y-4 rounded border p-6">
                         <FieldGroup :inline="false" id="amount" :placeholder="$t('Amount')" :input-error="form.errors.amount" v-slot="slotProps">
                             <el-input :placeholder="slotProps.placeholder" v-model="form.amount" class="w-full" size="large">
-                                <template #prepend>USD</template>
+                                <template #prepend>{{ $page.props.currenry?.global }}</template>
                             </el-input>
                         </FieldGroup>
                         <FieldGroup :inline="false" id="date" :placeholder="$t('Date')" :input-error="form.errors.date" v-slot="slotProps">

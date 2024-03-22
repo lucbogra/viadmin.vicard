@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\Money;
+use App\Casts\AEDMoney;
 use App\Traits\HasPerformer;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,7 +25,7 @@ class Transaction extends Model
 
     protected $casts = [
         "receips" => "array",
-        "amount" => Money::class,
+        "amount" => AEDMoney::class,
         "date" => 'date:Y-m-d',
     ];
 

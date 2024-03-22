@@ -142,11 +142,13 @@ watch(filterForm, debounce(term => {
                                             'border-green-400 bg-green-100 text-green-600': invoice.status == 'paid',
                                             'border-orange-400 bg-orange-100 text-orange-600': invoice.status == 'processing',
                                             'border-red-400 bg-red-100 text-red-600': invoice.status == 'pending',
+                                            'border-red-600 bg-red-100 text-red-800': invoice.status == 'reject',
                                         }">
                                         <span style="font-size: .7em" class="inline-flex items-center space-x-1">
                                             <Icon icon="icomoon-free:hour-glass" v-if="invoice.status == 'processing'" class="w-3 h-3" />
-                                            <Icon icon="nonicons:not-found-16" v-if="invoice.status == 'pending'" class="w-3 h-3" />
+                                            <Icon icon="mage:hour-glass" v-if="invoice.status == 'pending'" class="w-3 h-3" />
                                             <Icon icon="line-md:check-all" v-if="invoice.status == 'paid'" class="w-3 h-3" />
+                                            <Icon icon="lucide:file-x-2" v-if="invoice.status == 'reject'" class="w-3 h-3" />
                                             <span>{{ invoice.payment_status }}</span>
                                         </span>
                                     </span>
