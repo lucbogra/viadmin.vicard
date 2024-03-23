@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\AEDMoney;
+use App\Casts\Money;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,39 +27,27 @@ class Card extends Model
 
     protected $casts = [
         "card_validity"         => 'date:Y-m-d',
-        "card_balance"          => AEDMoney::class,
-        "card_limit"            => AEDMoney::class,
-        "daily_limit"           => AEDMoney::class,
-        "per_transaction_limit" => AEDMoney::class,
-        "card_fees"             => AEDMoney::class
+        "card_balance"          => Money::class,
+        "card_limit"            => Money::class,
+        "daily_limit"           => Money::class,
+        "per_transaction_limit" => Money::class,
+        "card_fees"             => Money::class
     ];
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-    //     static::saved(function ($model) {
+        static::creating(function ($model) {
 
-    //         $period = today();
+            if (!$model->currency) {
 
-    //         $format = "Y-m";
-        
-    //         $invoice = [
-    //             "customer_id"  => $model->owner->id,
-    //             "period"       => $period->format($format),
-    //             "currency"     => "USD",
-    //             "amount"       => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
-    //             "card_id"      => $model->id,
-    //             "payment_method" => "Bank Transfer",
-    //             "status"         => "paid",
-    //             "receips"        => $cardRequest->receips,
-    //             "paid_at"        => $cardRequest->created_at
-    //         ];
-        
-    //         $cardRequest->user->invoices()->create($invoice);
+                $model->currency = config('currency.currency');
 
-    //     });
-    // }
+            }
+
+        });
+    }
 
     public function scopeStatus($builder, $filter) {
 

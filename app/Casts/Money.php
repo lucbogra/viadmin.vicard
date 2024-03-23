@@ -16,8 +16,7 @@ class Money implements CastsAttributes
     {
         if($value == null) $value = 0;
 
-        return \Brick\Money\Money::ofMinor($value, config('currency.invoice_currency'));
-        // return \Brick\Money\Money::ofMinor($value, $attributes['currency']);
+        return \Brick\Money\Money::ofMinor($value, $attributes['currency']); # config('currency.invoice_currency')
     }
 
     /**
