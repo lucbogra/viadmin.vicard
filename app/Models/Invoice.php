@@ -73,14 +73,14 @@ class Invoice extends Model
     
                 $model->invoice_number = $invoiceNumber;
             }
+
+            if (!$model->currency) {
+
+                $model->currency = config('currency.invoice_currency');
+
+            }
         });
 
-        // static::created(function ($model) {
-
-        //     // $number = AutoNumber::where('key', 'invoice')->first();
-        //     // $number->update(['current_number' => $number->current_number + 1]);
-
-        // });
     }
 
     public function scopeUnPaids($builder) {

@@ -309,11 +309,11 @@ class CustomerController extends Controller
             $format = "Y-m";
 
             $invoice = [
-                "customer_id"  => $card->owner->id,
-                "period"       => $period->format($format),
-                "currency"     => config('currency.currency'),
-                "amount"       => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
-                "card_id"      => $card->id,
+                "customer_id"    => $card->owner->id,
+                "period"         => $period->format($format),
+                "currency"       => config('currency.currency'),
+                "amount"         => $isFirstCard ? config('billing.first_card_cost') : config('billing.other_cards_cost'),
+                "card_id"        => $card->id,
                 "payment_method" => "Bank Transfer",
                 "status"         => "paid",
                 "receips"        => $cardRequest->receips,
