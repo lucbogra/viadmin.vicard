@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('card_limit', 64, 0);
             $table->enum('card_type', Card::TYPE)->default('virtual');
             $table->decimal('card_balance', 64, 0);
-            $table->string('currency')->default('USD');
+            $table->string('currency')->default(config('currency.currency') ?? 'USD');
             $table->enum('card_status', Card::STATUS);
             $table->decimal('daily_limit', 64, 0);
             $table->decimal('per_transaction_limit', 64, 0);
