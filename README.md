@@ -1,66 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Vicard Admin
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Back-office d'administration pour la plateforme **Vicard** : gestion des cartes prépayées (virtuelles/physiques), des clients porteurs de cartes, des demandes de carte et de rechargement, de la facturation mensuelle des cartes, et des coordonnées bancaires utilisées pour les paiements. L'application s'intègre également à la plateforme externe **CodInvestor** (affiliation/investisseurs).
 
-## About Laravel
+Cette application est un panneau d'administration interne (accès réservé aux rôles `Admin` et `Account Manager`) — ce n'est pas l'app cliente-finale.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Stack technique
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend** : Laravel 10, Laravel Jetstream (auth + équipes via Fortify), Sanctum, Spatie Permission (rôles/permissions), Brick/Money (montants monétaires)
+- **Frontend** : Inertia.js + Vue 3, Tailwind CSS, PrimeVue, Element Plus, Vite
+- **Base de données** : MySQL (connexion principale + connexion secondaire `coddb` vers la base CodInvestor)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Prérequis
 
-## Learning Laravel
+- PHP >= 8.1
+- Composer
+- Node.js + npm
+- MySQL (une base locale + accès à la base `coddb` pour l'intégration CodInvestor)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+# Dépendances
+composer install
+npm install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Configuration
+cp .env.example .env
+php artisan key:generate
 
-## Laravel Sponsors
+# Base de données
+php artisan migrate --seed
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Assets front
+npm run build   # ou npm run dev en développement
+```
 
-### Premium Partners
+Le seeder (`RoleSeeder`) crée les rôles `Admin`, `Account Manager`, `Account Owner`, `Member`, ainsi qu'un compte administrateur par défaut :
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- Email : `admin@vicards.net`
+- Mot de passe : `password`
 
-## Contributing
+**Pensez à changer ce mot de passe avant tout déploiement en production.**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Variables d'environnement spécifiques
 
-## Code of Conduct
+En plus des variables Laravel standard, `.env` doit définir :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+# Connexion à la base CodInvestor (intégration affiliation)
+COD_HOST=
+COD_PORT=
+COD_DATABASE=
+COD_USERNAME=
+COD_PASSWORD=
 
-## Security Vulnerabilities
+# Liens API CodInvestor
+COD_INVESTOR_API_LINK=affiliate.codinvestor.com
+COD_INVESTOR_ADMIN_API_LINK=adminapp.codinvestor.com
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Coûts de facturation des cartes (en unités entières, pas en centimes)
+CARD_BILLING_FIRST_CARD_COST=29
+CARD_BILLING_OTHER_CARDS_COST=5
 
-## License
+# Devises
+CURRENCY=AED           # devise de fonctionnement des cartes
+INVOICE_CURRENCY=USD   # devise de facturation
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Lancer le projet en développement
+
+```bash
+php artisan serve
+npm run dev
+```
+
+## Tests
+
+```bash
+php artisan test
+# ou
+vendor/bin/phpunit
+vendor/bin/phpunit --filter NomDuTest
+```
+
+## Lint / formatage PHP
+
+```bash
+vendor/bin/pint
+```
+
+## Commande de facturation
+
+La facturation mensuelle des cartes activées se lance via :
+
+```bash
+php artisan bill:cards {jour?} {mois?}
+```
+
+Elle est planifiée automatiquement (`bill:cards lm`, tous les mois) dans `App\Console\Kernel`. Pour chaque carte activée, une facture (`Invoice`) est générée selon le rang de la carte chez son propriétaire (1ère carte = `CARD_BILLING_FIRST_CARD_COST`, suivantes = `CARD_BILLING_OTHER_CARDS_COST`), avec notification au client.
+
+## Fonctionnalités principales
+
+- **Clients & cartes** : consultation des clients, de leurs cartes, membres associés à une carte, transactions et factures
+- **Demandes de carte** (`CardRequest`) : validation/rejet des demandes d'émission de nouvelles cartes
+- **Demandes de rechargement** (`CardTopUpRequest`) : validation/rejet des demandes de top-up de solde
+- **Facturation** : suivi des factures, statut de paiement (payée / en attente de confirmation / rejetée / en attente)
+- **Banques** : gestion des coordonnées bancaires de la plateforme, affichées aux clients pour les paiements par virement
+- **Intégration CodInvestor** : rapprochement entre les utilisateurs Vicard et les comptes affiliés/investisseurs CodInvestor via une connexion base de données dédiée
+
+## Structure du projet
+
+```
+app/
+  Console/Commands/     Commandes artisan (ex: facturation des cartes)
+  Http/Controllers/      Contrôleurs (Customers, Cards, Invoices, Banks, Requests, CodInvestor/...)
+  Models/                Modèles Eloquent (Card, CardRequest, CardTopUpRequest, Invoice, Transaction, Bank, User, ...)
+  Models/CodInvestor/    Modèles pointant vers la base externe CodInvestor (connexion `coddb`)
+  Services/              AppMenu (menu admin), AppService (formatage montants/dates, notifications)
+  Casts/                 Cast Money (Brick\Money) pour les colonnes monétaires
+  Observers/             TransactionObserver (mise à jour automatique du solde des cartes)
+  Rules/                 Règles de validation métier (limites de carte)
+resources/js/
+  Pages/                 Pages Inertia (une arborescence par section d'admin)
+  Layouts/               Layouts partagés (dont la sidebar dans Layouts/Aside)
+  Components/            Composants Vue partagés (dont un composant Table générique)
+routes/web.php           Toutes les routes admin (protégées par auth + rôle admin)
+```
+
+## Licence
+
+Ce projet est basé sur le framework [Laravel](https://laravel.com), open-source sous licence MIT.
